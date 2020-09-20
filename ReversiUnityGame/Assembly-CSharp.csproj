@@ -58,7 +58,6 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\TestFolder\CellTrigger.cs" />
     <Compile Include="Assets\Scripts\TestFolder\Try.cs" />
-    <Compile Include="Assets\Scripts\View\HumanViewer.cs" />
     <Compile Include="Assets\Scripts\View\RobotViewer.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.5f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
