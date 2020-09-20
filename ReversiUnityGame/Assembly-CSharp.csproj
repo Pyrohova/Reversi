@@ -48,6 +48,9 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ReversiCore">
+      <HintPath>Assets\ReversiCore\ReversiCore.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2019.4.5f1\Editor\Data\Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -668,12 +671,6 @@
     <Reference Include="UnityEditor.UI">
       <HintPath>C:/Users/lensk/Documents/GitHub/Reversi/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ReversiCore\ReversiCore\ReversiCore.csproj">
-      <Project>{fb4baec9-cbc7-4171-a347-c02600908557}</Project>
-      <Name>ReversiCore</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
