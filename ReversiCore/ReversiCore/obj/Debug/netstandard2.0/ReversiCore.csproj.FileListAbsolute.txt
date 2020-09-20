@@ -1,0 +1,9 @@
+C:\Users\lensk\Documents\GitHub\Reversi\ReversiCore\ReversiCore\bin\Debug\netstandard2.0\ReversiCore.deps.json
+C:\Users\lensk\Documents\GitHub\Reversi\ReversiCore\ReversiCore\bin\Debug\netstandard2.0\ReversiCore.dll
+C:\Users\lensk\Documents\GitHub\Reversi\ReversiCore\ReversiCore\bin\Debug\netstandard2.0\ReversiCore.pdb
+C:\Users\lensk\Documents\GitHub\Reversi\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.csprojAssemblyReference.cache
+C:\Users\lensk\Documents\GitHub\Reversi\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.AssemblyInfoInputs.cache
+C:\Users\lensk\Documents\GitHub\Reversi\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.AssemblyInfo.cs
+C:\Users\lensk\Documents\GitHub\Reversi\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.csproj.CoreCompileInputs.cache
+C:\Users\lensk\Documents\GitHub\Reversi\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.dll
+C:\Users\lensk\Documents\GitHub\Reversi\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.pdb
