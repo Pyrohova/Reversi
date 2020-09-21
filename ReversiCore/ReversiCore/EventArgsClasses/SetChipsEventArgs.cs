@@ -6,7 +6,7 @@ namespace ReversiCore
 {
     public class SetChipsEventArgs : EventArgs
     {
-        public Color NewChip { get; set; }
-        public IEnumerable<Color> ChangedChips { get; set; }
+        public Chip NewChip { get; set; }
+        public IEnumerable<Chip> ChangedChips { get; set; }
     }
 }

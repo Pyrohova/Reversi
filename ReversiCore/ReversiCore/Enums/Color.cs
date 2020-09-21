@@ -1,6 +1,6 @@
 ﻿namespace ReversiCore.Enums
 {
-    public enum Color
+    public enum Color : byte
     {
         White,
         Black

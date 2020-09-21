@@ -1,6 +1,6 @@
 ﻿namespace ReversiCore.Enums
 {
-    public enum GameMode
+    public enum GameMode : byte
     {
         HumanToRobot,
         HumanToHuman

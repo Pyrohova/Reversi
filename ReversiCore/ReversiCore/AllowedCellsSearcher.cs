@@ -1,45 +1,71 @@
 ﻿using ReversiCore.Enums;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace ReversiCore
 {
-    internal class AllowedCellsSearcher
+    internal class AllowedCellsSearcher : Searcher
     {
-        private Board board;
+        internal AllowedCellsSearcher(Board currentBoard, Color currentPlayerColor)
+            : base(currentBoard, currentPlayerColor) { }
 
-        internal AllowedCellsSearcher(Board currentBoard)
+        internal SortedSet<Cell> GetAllAllowedCells(Color currentPlayerColor)
         {
-            board = currentBoard;
-        }
+            SortedSet<Cell> AllAllowedCells = new SortedSet<Cell>();
 
-        internal IEnumerable<Cell> GetAllAllowedCells(Color currentPlayerColor)
-        {
             for (int i = 0; i < board.Size; i++)
-            {
+            { 
                 for (int j = 0; j < board.Size; j++)
                 {
                     if (board.Field[i, j] == currentPlayerColor)
                     {
-                        GetAllowedCellsForCell(new Cell(i, j));
+                        IEnumerable<Cell> NewAllowedCells = GetAllowedCellsForCell(new Cell(i, j));
+                        AllAllowedCells.UnionWith(NewAllowedCells);
                     }
                 }
             }
+
+            return AllAllowedCells;
         }
 
-        internal IEnumerable<Cell> GetAllowedCellsForChip(Chip currentChip)
+        private SortedSet<Cell> GetAllowedCellsForCell(Cell cell)
         {
-            for (int i = -1; i <= 1; i++)
-            {
-                for (int j = -1; j <= 1; j++)
-                {
-                    if (board.Field[i, j] == currentPlayerColor)
-                    {
+            SortedSet<Cell> AllowedCells = new SortedSet<Cell>();
 
+            for (int stepX = -1; stepX <= 1; stepX++)
+            {
+                for (int stepY = -1; stepY <= 1; stepY++)
+                {
+                    int maxDistance = GetDistanceToFieldEdgeForCell(cell, stepX, stepY);
+
+                    int distance = 1;
+                    int currentX = cell.X;
+                    int currentY = cell.Y;
+
+                    while (distance <= maxDistance)
+                    {
+                        currentX += stepX;
+                        currentY += stepY;
+
+                        if (board.Field[currentX, currentY] == playerColor)
+                        {
+                            break;
+                        }
+
+                        if (board.Field[currentX, currentY] == null && distance > 1)
+                        {
+                            AllowedCells.Add(new Cell(currentX, currentY));
+                            break;
+                        }
+
+                        distance++;
                     }
                 }
             }
+
+            return AllowedCells;
         }
     }
 }

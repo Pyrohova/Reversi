@@ -8,14 +8,12 @@ namespace ReversiCore
     internal class Board
     {
         internal int Size { get; private set; }
-        internal List<Cell> FilledCells { get; set; }
-        internal Color[,] Field { get; set; }
+        internal Color?[,] Field { get; set; }
 
         internal Board()
         {
             Size = 8;
-            Field = new Color[Size, Size];
-            FilledCells = new List<Cell>();
+            Field = new Color?[Size, Size];
         }
     }
 }
