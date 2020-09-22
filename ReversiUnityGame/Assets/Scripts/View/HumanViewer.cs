@@ -1,11 +1,10 @@
 ﻿using ReversiCore;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.View
 {
-    public class RobotViewer : MonoBehaviour
+    public class HumanViewer : MonoBehaviour
     {
         public void ClearAll()
         {
