@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lensk\\Documents\\GitHub\\Reversi\\ReversiCore\\ReversiCore\\ReversiCore.csproj": {}
+    "C:\\Users\\lensk\\Documents\\GitHub\\ReversiSimple\\ReversiCore\\ReversiCore\\ReversiCore.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lensk\\Documents\\GitHub\\Reversi\\ReversiCore\\ReversiCore\\ReversiCore.csproj": {
+    "C:\\Users\\lensk\\Documents\\GitHub\\ReversiSimple\\ReversiCore\\ReversiCore\\ReversiCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lensk\\Documents\\GitHub\\Reversi\\ReversiCore\\ReversiCore\\ReversiCore.csproj",
+        "projectUniqueName": "C:\\Users\\lensk\\Documents\\GitHub\\ReversiSimple\\ReversiCore\\ReversiCore\\ReversiCore.csproj",
         "projectName": "ReversiCore",
-        "projectPath": "C:\\Users\\lensk\\Documents\\GitHub\\Reversi\\ReversiCore\\ReversiCore\\ReversiCore.csproj",
+        "projectPath": "C:\\Users\\lensk\\Documents\\GitHub\\ReversiSimple\\ReversiCore\\ReversiCore\\ReversiCore.csproj",
         "packagesPath": "C:\\Users\\lensk\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lensk\\Documents\\GitHub\\Reversi\\ReversiCore\\ReversiCore\\obj\\",
+        "outputPath": "C:\\Users\\lensk\\Documents\\GitHub\\ReversiSimple\\ReversiCore\\ReversiCore\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\lensk\\AppData\\Roaming\\NuGet\\NuGet.Config",

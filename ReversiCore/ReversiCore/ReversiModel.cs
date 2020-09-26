@@ -8,7 +8,7 @@ namespace ReversiCore
     public class ReversiModel : IReversiModel
     {
         private TurnHolder turnHolder;
-        private BoardManipulator boardManipulator;
+        private Board board;
         private CountHolder countHolder;
         private SortedSet<Cell> currentAllowerCells;
 
@@ -16,20 +16,20 @@ namespace ReversiCore
         public event EventHandler<SetChipsEventArgs> SetChips;
         public event EventHandler<WrongMoveEventArgs> WrongMove;
         public event EventHandler<CountChangedEventArgs> CountChanged;
-        public event EventHandler<SwitchMoveEventArgs> SwitchMove;
         public event EventHandler<GameOverEventArgs> GameOver;
-
+        public Dictionary<Color, EventHandler<SwitchMoveEventArgs>> SwitchMove { get; set; }
+        
         public ReversiModel()
         {
             turnHolder = new TurnHolder();
-            boardManipulator = new BoardManipulator();
+            board = new Board();
             currentAllowerCells = new SortedSet<Cell>();
             countHolder = new CountHolder();
         }
 
         public void NewGame(GameMode newGameMode)
         {
-            boardManipulator.Clear();
+            board.Clear();
             turnHolder.Reset();
             
             NewGameStarted?.Invoke(this, new NewGameEventArgs{ NewGameMode = newGameMode });
@@ -44,7 +44,7 @@ namespace ReversiCore
 
             CalculateAllowedCells();
 
-            SwitchMove?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowerCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
+            SwitchMove[turnHolder.CurrentTurnColor]?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowerCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
         }
         
         public void PutChip(int x, int y)
@@ -52,9 +52,9 @@ namespace ReversiCore
             Chip newChip = new Chip(turnHolder.CurrentTurnColor, new Cell(x, y));
             CheckNewChip(newChip);
 
-            boardManipulator.AddChip(newChip);
+            board.AddChip(newChip);
 
-            List<Chip> changedChips = boardManipulator.GetChangedChips(newChip, turnHolder.CurrentTurnColor);
+            List<Chip> changedChips = board.GetChangedChips(newChip, turnHolder.CurrentTurnColor);
             countHolder.Increase(turnHolder.CurrentTurnColor, changedChips.Count + 1);
             countHolder.Decrease(turnHolder.OppositeTurnColor, changedChips.Count);
 
@@ -69,7 +69,7 @@ namespace ReversiCore
 
             CalculateAllowedCells();
             
-            SwitchMove?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowerCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
+            SwitchMove[turnHolder.CurrentTurnColor]?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowerCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
         }
 
         private void CheckNewChip(Chip chip)
@@ -83,7 +83,7 @@ namespace ReversiCore
 
         private void CalculateAllowedCells()
         {
-            SortedSet<Cell> allowedCells = boardManipulator.GetAllowedCells(turnHolder.CurrentTurnColor);
+            SortedSet<Cell> allowedCells = board.GetAllowedCells(turnHolder.CurrentTurnColor);
 
             if (allowedCells.Count == 0)
             {

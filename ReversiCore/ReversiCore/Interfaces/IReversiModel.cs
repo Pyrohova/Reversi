@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ReversiCore.Enums;
+using System;
+using System.Collections.Generic;
 
 namespace ReversiCore.Interfaces
 {
@@ -8,7 +10,7 @@ namespace ReversiCore.Interfaces
         event EventHandler<SetChipsEventArgs> SetChips;
         event EventHandler<WrongMoveEventArgs> WrongMove;
         event EventHandler<CountChangedEventArgs> CountChanged;
-        event EventHandler<SwitchMoveEventArgs> SwitchMove;
         event EventHandler<GameOverEventArgs> GameOver;
+        Dictionary<Color, EventHandler<SwitchMoveEventArgs>> SwitchMove { get; set; }
     }
 }
