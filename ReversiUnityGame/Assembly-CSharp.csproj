@@ -51,6 +51,9 @@
     <Reference Include="ReversiCore">
       <HintPath>Assets\Libraries\ReversiCore\ReversiCore.dll</HintPath>
     </Reference>
+    <Reference Include="ReversiRobot">
+      <HintPath>Assets\Libraries\ReversiRobot\ReversiRobot.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2019.4.5f1\Editor\Data\Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
