@@ -50,12 +50,8 @@ namespace Assets.Scripts.View
             currentTurn.text = "";
         }
 
-
         private void AddChip(Chip newChip)
         {
-            //if cell border exist(what means cell is allowed) then add new chip
-            //if (allowedCells[newChip.Cell.X, newChip.Cell.X] != null)
-            //{
                 GameObject chipToCreate;
 
                 if (newChip.Color == ReversiCore.Enums.Color.Black)
@@ -67,12 +63,6 @@ namespace Assets.Scripts.View
                     newChip.Cell.Y].transform.position, chipToCreate.transform.rotation);
                 existedChips[newChip.Cell.X, newChip.Cell.Y].transform.SetParent(chips.transform);
                 existedChips[newChip.Cell.X, newChip.Cell.Y].name = newChip.Cell.X + "" + newChip.Cell.Y;
-
-            //}
-            //else
-            //{
-            //    infoField.text = "wrong move, try again";
-            //}
 
         }
 
@@ -91,7 +81,14 @@ namespace Assets.Scripts.View
                     boardCells[i, j] = Instantiate(cellProto, new Vector2(startX, startY), cellProto.transform.rotation);
                     boardCells[i, j].name = i + "" + j;
                     boardCells[i, j].transform.SetParent(cells.transform);
+
+                    allowedCells[i,j] = Instantiate(allowedCellProto, new Vector2(startX, startY), cellProto.transform.rotation);
+                    allowedCells[i, j].name = i + "" + j;
+                    allowedCells[i, j].transform.SetParent(cellColliders.transform);
+                    allowedCells[i, j].SetActive(false);
+
                     startX += step;
+
                     if (j == boardSize - 1)
                         startX = -473;
                 }
@@ -103,13 +100,11 @@ namespace Assets.Scripts.View
 
         private void SwitchTurn(object sender, SwitchMoveEventArgs e)
         {
-            Debug.Log(e.CurrentPlayerColor);
             // remove previous allowed cells
             ClearAllowedCells();
             // create new
             foreach (Cell allowedCell in e.AllowedCells)
             {
-                Debug.Log(allowedCell.X + "" + allowedCell.Y);
                 AllowCell(allowedCell);
             }
 
@@ -122,17 +117,14 @@ namespace Assets.Scripts.View
         // create cell collider if this cell is allowed
         private void AllowCell(Cell cell)
         {
-            allowedCells[cell.X, cell.Y] = Instantiate(allowedCellProto, boardCells[cell.X,
-                cell.Y].transform.position, allowedCellProto.transform.rotation);
-            allowedCells[cell.X, cell.Y].transform.SetParent(cellColliders.transform);
-            allowedCells[cell.X, cell.Y].transform.name = cell.X + "" + cell.Y;
+            allowedCells[cell.X, cell.Y].SetActive(true);
         }
 
         private void ClearAllowedCells()
         {
             foreach (GameObject cell in allowedCells)
             {
-                Destroy(cell);
+                cell.SetActive(false);
             }
         }
 
