@@ -50,7 +50,11 @@ namespace ReversiCore
         public void PutChip(int x, int y)
         {
             Chip newChip = new Chip(turnHolder.CurrentTurnColor, new Cell(x, y));
-            CheckNewChip(newChip);
+
+            if (!NewChipAllowed(newChip))
+            {
+                return;
+            }
 
             board.AddChip(newChip);
 
@@ -72,13 +76,15 @@ namespace ReversiCore
             SwitchMove[turnHolder.CurrentTurnColor]?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowerCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
         }
 
-        private void CheckNewChip(Chip chip)
+        private bool NewChipAllowed(Chip chip)
         {
             if (chip.Color != turnHolder.CurrentTurnColor || !currentAllowerCells.Contains(chip.Cell))
             {
                 WrongMove?.Invoke(this, new WrongMoveEventArgs { WrongChip = chip });
-                return;
+                return false;
             }
+
+            return true;
         }
 
         private void CalculateAllowedCells()
