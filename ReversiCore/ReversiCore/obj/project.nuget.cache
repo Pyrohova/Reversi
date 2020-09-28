@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "TRuyXBjQ5ZGtJ8DRfrKu7tMVd3D/aT0Ew7qfxKCsAkS0v0wvFS0covw/uyOvAgbOhOjGMGGWNjG2ADkOCdpO2Q==",
+  "dgSpecHash": "+F8r6/7zmlVYQNbmMH7zmEqRBqZ1r0cnsH0cCkaZk2hjiu58XLmx1PGB75h7Ge5fXxtm7K4zKmvxK/1X5Q/MqQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\lensk\\Documents\\GitHub\\ReversiSimple\\ReversiCore\\ReversiCore\\ReversiCore.csproj",
+  "projectFilePath": "/Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiCore/ReversiCore/ReversiCore.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\lensk\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
-    "C:\\Users\\lensk\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder/microsoft.netcore.platforms/1.1.0/microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder/netstandard.library/2.0.3/netstandard.library.2.0.3.nupkg.sha512"
   ],
   "logs": []
 }
