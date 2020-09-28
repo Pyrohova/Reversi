@@ -14,7 +14,7 @@ namespace ReversiCore
         {
             Size = 8;
             Field = new Color?[Size, Size];
-            SetStartPosition();
+            Clear();
         }
 
         internal void Clear()
@@ -26,6 +26,8 @@ namespace ReversiCore
                     Field[i, j] = null;
                 }
             }
+
+            SetStartPosition();
         }
 
         internal void SetStartPosition()
