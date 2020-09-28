@@ -6,7 +6,7 @@ namespace Assets.Scripts.TestFolder
 {
     public class CellTrigger : MonoBehaviour
     {
-        [SerializeField] GameObject chip;
+        [SerializeField] HumanController controller;
         // Start is called before the first frame update
         void Start()
         {
@@ -21,7 +21,9 @@ namespace Assets.Scripts.TestFolder
 
         private void OnMouseDown()
         {
-            Instantiate(chip, transform.position, chip.transform.rotation);
+            controller.PutChip(transform.name);
         }
+
+
     }
 }
