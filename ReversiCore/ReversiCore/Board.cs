@@ -39,7 +39,7 @@ namespace ReversiCore
 
         internal SortedSet<Cell> GetAllowedCells(Color currentPlayerColor)
         {
-            AllowedCellsSearcher allowedCellsSearcher = new AllowedCellsSearcher(this, currentPlayerColor); //Field, not this
+            AllowedCellsSearcher allowedCellsSearcher = new AllowedCellsSearcher(this, currentPlayerColor); //Field, not this TODO
             return allowedCellsSearcher.GetAllAllowedCells(currentPlayerColor);
         }
 
@@ -50,7 +50,7 @@ namespace ReversiCore
 
         internal List<Chip> GetChangedChips(Chip newChip, Color currentPlayerColor)
         {
-            ChangedChipsSearcher changedChipsSearcher = new ChangedChipsSearcher(this, currentPlayerColor); //Field, not this
+            ChangedChipsSearcher changedChipsSearcher = new ChangedChipsSearcher(this, currentPlayerColor); //Field, not this TODO
             List<Chip> changedChips = changedChipsSearcher.GetAllChangedChips(newChip);
             RepaintChips(changedChips, currentPlayerColor);
             return changedChips;

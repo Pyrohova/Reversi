@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "CrlEWBoCpysFXfauUJDHcQ5jIrfpxjnJOINXZhqx+rx0k7gGufASmDTXQxK0o01u8mcyQJXDd+GQMs4aGmNT5w==",
+  "dgSpecHash": "6Cn+0bNv507weU+SFH21gs2NlRtoPl/S/1Hu8QW/9gmYLstS00JiEbv9YWzYfh9CFW8WIfO9Vo3VWULlgBSIwg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\lensk\\Documents\\GitHub\\Reversi\\ReversiRobot\\ReversiRobot\\ReversiRobot.csproj",
+  "projectFilePath": "C:\\Users\\lensk\\Documents\\GitHub\\ReversiSimple\\ReversiRobot\\ReversiRobot\\ReversiRobot.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lensk\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\lensk\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"

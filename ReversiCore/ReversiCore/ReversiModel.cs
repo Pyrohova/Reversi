@@ -10,27 +10,37 @@ namespace ReversiCore
         private TurnHolder turnHolder;
         private Board board;
         private CountHolder countHolder;
-        private SortedSet<Cell> currentAllowerCells;
+        private SortedSet<Cell> currentAllowedCells;
 
         public event EventHandler<NewGameEventArgs> NewGameStarted;
         public event EventHandler<SetChipsEventArgs> SetChips;
         public event EventHandler<WrongMoveEventArgs> WrongMove;
         public event EventHandler<CountChangedEventArgs> CountChanged;
         public event EventHandler<GameOverEventArgs> GameOver;
+        public event EventHandler<RobotColorSetEventArgs> RobotColorSet;
         public Dictionary<Color, EventHandler<SwitchMoveEventArgs>> SwitchMove { get; set; }
         
         public ReversiModel()
         {
             turnHolder = new TurnHolder();
             board = new Board();
-            currentAllowerCells = new SortedSet<Cell>();
+            currentAllowedCells = new SortedSet<Cell>();
             countHolder = new CountHolder();
+
+            SwitchMove = new Dictionary<Color, EventHandler<SwitchMoveEventArgs>>();
+            SwitchMove[Color.White] = null;
+            SwitchMove[Color.Black] = null;
         }
 
-        public void NewGame(GameMode newGameMode)
+        public void NewGame(GameMode newGameMode, Color? userPlayerColor = null)
         {
             board.Clear();
             turnHolder.Reset();
+
+            if (newGameMode == GameMode.HumanToRobot)
+            {
+                SetRobotColor(userPlayerColor);
+            }
             
             NewGameStarted?.Invoke(this, new NewGameEventArgs{ NewGameMode = newGameMode });
 
@@ -44,7 +54,7 @@ namespace ReversiCore
 
             CalculateAllowedCells();
 
-            SwitchMove[turnHolder.CurrentTurnColor]?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowerCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
+            SwitchMove[turnHolder.CurrentTurnColor]?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowedCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
         }
         
         public void PutChip(int x, int y)
@@ -73,12 +83,29 @@ namespace ReversiCore
 
             CalculateAllowedCells();
             
-            SwitchMove[turnHolder.CurrentTurnColor]?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowerCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
+            SwitchMove[turnHolder.CurrentTurnColor]?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowedCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
+        }
+
+        private void SetRobotColor(Color? userPlayerColor)
+        {
+            if (userPlayerColor == null)
+            {
+                //TODO
+            }
+
+            Color robotColor = Color.White;
+
+            if (userPlayerColor == Color.White)
+            {
+                robotColor = Color.Black;
+            }
+
+            RobotColorSet?.Invoke(this, new RobotColorSetEventArgs { RobotColor = robotColor });
         }
 
         private bool NewChipAllowed(Chip chip)
         {
-            if (chip.Color != turnHolder.CurrentTurnColor || !currentAllowerCells.Contains(chip.Cell))
+            if (chip.Color != turnHolder.CurrentTurnColor || !currentAllowedCells.Contains(chip.Cell))
             {
                 WrongMove?.Invoke(this, new WrongMoveEventArgs { WrongChip = chip });
                 return false;
@@ -97,7 +124,7 @@ namespace ReversiCore
                 return;
             }
 
-            currentAllowerCells = allowedCells;
+            currentAllowedCells = allowedCells;
         }
 
         private void EndGame()
