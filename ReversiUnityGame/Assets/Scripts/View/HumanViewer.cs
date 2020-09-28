@@ -32,6 +32,8 @@ namespace Assets.Scripts.View
         private GameObject[,] existedChips;
         private GameObject[,] allowedCells;
 
+        private GameMode currentMode;
+
         private ReversiCore.Enums.Color playerColor;
 
         public void ClearAll()
@@ -48,11 +50,12 @@ namespace Assets.Scripts.View
             currentTurn.text = "";
         }
 
+
         private void AddChip(Chip newChip)
         {
             //if cell border exist(what means cell is allowed) then add new chip
-            if (allowedCells[newChip.Cell.X, newChip.Cell.X] != null)
-            {
+            //if (allowedCells[newChip.Cell.X, newChip.Cell.X] != null)
+            //{
                 GameObject chipToCreate;
 
                 if (newChip.Color == ReversiCore.Enums.Color.Black)
@@ -65,11 +68,11 @@ namespace Assets.Scripts.View
                 existedChips[newChip.Cell.X, newChip.Cell.Y].transform.SetParent(chips.transform);
                 existedChips[newChip.Cell.X, newChip.Cell.Y].name = newChip.Cell.X + "" + newChip.Cell.Y;
 
-            }
-            else
-            {
-                infoField.text = "wrong move, try again";
-            }
+            //}
+            //else
+            //{
+            //    infoField.text = "wrong move, try again";
+            //}
 
         }
 
@@ -100,11 +103,13 @@ namespace Assets.Scripts.View
 
         private void SwitchTurn(object sender, SwitchMoveEventArgs e)
         {
+            Debug.Log(e.CurrentPlayerColor);
             // remove previous allowed cells
             ClearAllowedCells();
             // create new
             foreach (Cell allowedCell in e.AllowedCells)
             {
+                Debug.Log(allowedCell.X + "" + allowedCell.Y);
                 AllowCell(allowedCell);
             }
 
@@ -120,6 +125,7 @@ namespace Assets.Scripts.View
             allowedCells[cell.X, cell.Y] = Instantiate(allowedCellProto, boardCells[cell.X,
                 cell.Y].transform.position, allowedCellProto.transform.rotation);
             allowedCells[cell.X, cell.Y].transform.SetParent(cellColliders.transform);
+            allowedCells[cell.X, cell.Y].transform.name = cell.X + "" + cell.Y;
         }
 
         private void ClearAllowedCells()
@@ -138,6 +144,7 @@ namespace Assets.Scripts.View
 
         private void WrongMove(object sender, WrongMoveEventArgs e)
         {
+            infoField.text = "wrong move";
             Debug.Log(e.WrongChip.Cell.X + "" + e.WrongChip.Cell.Y);
         }
 
@@ -148,6 +155,7 @@ namespace Assets.Scripts.View
                 infoField.text = "new game with second player started";
             else
                 infoField.text = "new game with robot started";
+            currentMode = e.NewGameMode;
         }
 
         private void GameOver(object sender, GameOverEventArgs e)
@@ -163,6 +171,8 @@ namespace Assets.Scripts.View
 
         private void SetChips(object sender, SetChipsEventArgs e)
         {
+            Debug.Log(e.NewChip.Color.ToString());
+
             AddChip(e.NewChip);
 
             foreach (Chip chip in e.ChangedChips)
@@ -178,24 +188,32 @@ namespace Assets.Scripts.View
             model.NewGameStarted += NewGameStarted;
             model.GameOver += GameOver;
             model.SetChips += SetChips;
-            //Debug.Log(playerColor.ToString());
-            model.SwitchMove[playerColor] += SwitchTurn;
+
+            if (currentMode == GameMode.HumanToHuman)
+            {
+                model.SwitchMove[ReversiCore.Enums.Color.Black] += SwitchTurn;
+                model.SwitchMove[ReversiCore.Enums.Color.White] += SwitchTurn;
+            } else
+            {
+                model.SwitchMove[playerColor] += SwitchTurn;
+                // subscribe on switch move [opposite color] by method where {startcorutine()}
+            }
+
             model.WrongMove += WrongMove;
 
         }
         // Start is called before the first frame update
         void Start()
         {
+            model = holder.reversiModel;
             boardCells = new GameObject[boardSize, boardSize];
             existedChips = new GameObject[boardSize, boardSize];
             allowedCells = new GameObject[boardSize, boardSize];
 
             GenerateBoard();
 
-            model = holder.reversiModel;
             //ClearAll();
             playerColor = ReversiCore.Enums.Color.Black;
-
             SubscribeOnEvents();
         }
 

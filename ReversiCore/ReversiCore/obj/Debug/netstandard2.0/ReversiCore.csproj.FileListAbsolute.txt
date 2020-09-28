@@ -18,6 +18,7 @@ C:/Users/lensk/Documents/GitHub/ReversiSimple/ReversiCore/ReversiCore/bin/Debug/
 /Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiCore/ReversiCore/bin/Debug/netstandard2.0/ReversiCore.deps.json
 /Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiCore/ReversiCore/bin/Debug/netstandard2.0/ReversiCore.dll
 /Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiCore/ReversiCore/bin/Debug/netstandard2.0/ReversiCore.pdb
+/Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.csprojAssemblyReference.cache
 /Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.AssemblyInfoInputs.cache
 /Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.AssemblyInfo.cs
 /Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.csproj.CoreCompileInputs.cache
