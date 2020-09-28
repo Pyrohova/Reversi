@@ -34,7 +34,6 @@ namespace ReversiCore
 
         public void NewGame(GameMode newGameMode, Color? userPlayerColor = null)
         {
-            board.Clear();
             turnHolder.Reset();
 
             if (newGameMode == GameMode.HumanToRobot)
@@ -43,6 +42,8 @@ namespace ReversiCore
             }
             
             NewGameStarted?.Invoke(this, new NewGameEventArgs{ NewGameMode = newGameMode });
+
+            SetStartBoardPosition();
 
             countHolder.Reset();
 
@@ -86,7 +87,7 @@ namespace ReversiCore
             SwitchMove[turnHolder.CurrentTurnColor]?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowedCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
         }
 
-        private void SetStartPosition()
+        private void SetStartBoardPosition()
         {
             //TODO убрать дублирование с Board
             List<Chip> startChips = new List<Chip>()
@@ -96,6 +97,8 @@ namespace ReversiCore
                 new Chip(Color.Black, new Cell(3, 4)),
                 new Chip(Color.Black, new Cell(4, 3))
             };
+
+            board.SetStartPosition(startChips);
 
             foreach(Chip chip in startChips)
             {

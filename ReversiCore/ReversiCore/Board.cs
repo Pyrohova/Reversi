@@ -17,7 +17,7 @@ namespace ReversiCore
             Clear();
         }
 
-        internal void Clear()
+        private void Clear()
         {
             for (int i = 0; i < Size; i++)
             {
@@ -26,17 +26,16 @@ namespace ReversiCore
                     Field[i, j] = null;
                 }
             }
-
-            SetStartPosition();
         }
 
-        internal void SetStartPosition()
+        internal void SetStartPosition(IEnumerable<Chip> startChips)
         {
             Clear();
-            Field[3, 3] = Color.White;
-            Field[4, 4] = Color.White;
-            Field[3, 4] = Color.Black;
-            Field[4, 3] = Color.Black;
+            
+            foreach(Chip chip in startChips)
+            {
+                Field[chip.Cell.X, chip.Cell.Y] = chip.Color;
+            }
         }
 
         internal SortedSet<Cell> GetAllowedCells(Color currentPlayerColor)
