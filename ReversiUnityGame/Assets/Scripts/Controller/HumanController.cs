@@ -15,7 +15,6 @@ public class HumanController : MonoBehaviour
 
     public void PutChip(string cellName)
     {
-        Debug.Log("kek");
         int x = Int32.Parse(cellName[0].ToString());
         int y = Int32.Parse(cellName[1].ToString());
 

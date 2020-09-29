@@ -1,9 +1,9 @@
 ﻿<Properties StartupConfiguration="{EA2401DE-9D76-08FE-5139-02F3CE7A04AC}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Controller/HumanController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/View/HumanViewer.cs">
     <Files>
-      <File FileName="Assets/Scripts/View/HumanViewer.cs" Line="176" Column="15" />
-      <File FileName="Assets/Scripts/Controller/CellTrigger.cs" Line="23" Column="10" />
-      <File FileName="Assets/Scripts/Controller/HumanController.cs" Line="18" Column="15" />
+      <File FileName="Assets/Scripts/View/HumanViewer.cs" Line="180" Column="33" />
+      <File FileName="Assets/Scripts/Controller/CellTrigger.cs" />
+      <File FileName="Assets/Scripts/Controller/HumanController.cs" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -11,10 +11,10 @@
           <Node name="ReversiUnityGame" expanded="True">
             <Node name="Assets" expanded="True">
               <Node name="Scripts" expanded="True">
-                <Node name="Controller" expanded="True">
-                  <Node name="HumanController.cs" selected="True" />
+                <Node name="Controller" expanded="True" />
+                <Node name="View" expanded="True">
+                  <Node name="HumanViewer.cs" selected="True" />
                 </Node>
-                <Node name="View" expanded="True" />
               </Node>
             </Node>
           </Node>
