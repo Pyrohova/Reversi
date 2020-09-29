@@ -33,10 +33,21 @@ namespace ReversiRobot
 
         private void ChangeColor(Color newCurrentColor)
         {
+            if (currentColor == newCurrentColor)
+            {
+                return;
+            }
+
+            model.SwitchMove[currentColor] -= OnSwitchMove;
+
             currentColor = newCurrentColor;
 
-            model.SwitchMove[currentColor] +=
-                (sender, eventArgs) => MakeMove(eventArgs.AllowedCells);
+            model.SwitchMove[currentColor] += OnSwitchMove;
+        }
+
+        private void OnSwitchMove(object sender, SwitchMoveEventArgs eventArgs)
+        {
+            MakeMove(eventArgs.AllowedCells);
         }
     }
 }
