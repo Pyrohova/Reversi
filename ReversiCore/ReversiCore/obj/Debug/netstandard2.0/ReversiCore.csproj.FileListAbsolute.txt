@@ -7,14 +7,6 @@ C:/Users/lensk/Documents/GitHub/Reversi/ReversiCore/ReversiCore/obj/Debug/netsta
 C:/Users/lensk/Documents/GitHub/Reversi/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.csproj.CoreCompileInputs.cache
 C:/Users/lensk/Documents/GitHub/Reversi/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.dll
 C:/Users/lensk/Documents/GitHub/Reversi/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.pdb
-C:/Users/lensk/Documents/GitHub/ReversiSimple/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.AssemblyInfoInputs.cache
-C:/Users/lensk/Documents/GitHub/ReversiSimple/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.AssemblyInfo.cs
-C:/Users/lensk/Documents/GitHub/ReversiSimple/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.csproj.CoreCompileInputs.cache
-C:/Users/lensk/Documents/GitHub/ReversiSimple/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.dll
-C:/Users/lensk/Documents/GitHub/ReversiSimple/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.pdb
-C:/Users/lensk/Documents/GitHub/ReversiSimple/ReversiCore/ReversiCore/bin/Debug/netstandard2.0/ReversiCore.deps.json
-C:/Users/lensk/Documents/GitHub/ReversiSimple/ReversiCore/ReversiCore/bin/Debug/netstandard2.0/ReversiCore.dll
-C:/Users/lensk/Documents/GitHub/ReversiSimple/ReversiCore/ReversiCore/bin/Debug/netstandard2.0/ReversiCore.pdb
 /Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiCore/ReversiCore/bin/Debug/netstandard2.0/ReversiCore.deps.json
 /Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiCore/ReversiCore/bin/Debug/netstandard2.0/ReversiCore.dll
 /Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiCore/ReversiCore/bin/Debug/netstandard2.0/ReversiCore.pdb
@@ -24,3 +16,11 @@ C:/Users/lensk/Documents/GitHub/ReversiSimple/ReversiCore/ReversiCore/bin/Debug/
 /Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.csproj.CoreCompileInputs.cache
 /Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.dll
 /Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiCore/ReversiCore/obj/Debug/netstandard2.0/ReversiCore.pdb
+C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCore\bin\Debug\netstandard2.0\ReversiCore.deps.json
+C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCore\bin\Debug\netstandard2.0\ReversiCore.dll
+C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCore\bin\Debug\netstandard2.0\ReversiCore.pdb
+C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.AssemblyInfoInputs.cache
+C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.AssemblyInfo.cs
+C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.csproj.CoreCompileInputs.cache
+C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.dll
+C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.pdb

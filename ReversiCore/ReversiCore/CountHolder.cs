@@ -17,8 +17,8 @@ namespace ReversiCore
 
         internal void Reset()
         {
-            counts[Color.White] = 0;
-            counts[Color.Black] = 0;
+            counts[Color.White] = 2;
+            counts[Color.Black] = 2;
         }
 
         internal void Increase(Color playerColor, int delta)
