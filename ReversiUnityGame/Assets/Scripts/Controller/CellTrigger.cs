@@ -21,6 +21,7 @@ namespace Assets.Scripts.TestFolder
 
         private void OnMouseDown()
         {
+            Debug.Log("triggered cell " + transform.name);
             controller.PutChip(transform.name);
         }
 

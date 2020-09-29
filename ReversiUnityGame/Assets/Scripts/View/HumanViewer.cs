@@ -102,6 +102,7 @@ namespace Assets.Scripts.View
         {
             // remove previous allowed cells
             ClearAllowedCells();
+
             // create new
             foreach (Cell allowedCell in e.AllowedCells)
             {
@@ -114,7 +115,7 @@ namespace Assets.Scripts.View
 
         }
 
-        // create cell collider if this cell is allowed
+        // enable collider if this cell is allowed
         private void AllowCell(Cell cell)
         {
             allowedCells[cell.X, cell.Y].SetActive(true);
@@ -137,7 +138,7 @@ namespace Assets.Scripts.View
         private void WrongMove(object sender, WrongMoveEventArgs e)
         {
             infoField.text = "wrong move";
-            Debug.Log(e.WrongChip.Cell.X + "" + e.WrongChip.Cell.Y);
+            Debug.Log("wrong move on " + e.WrongChip.Cell.X + "" + e.WrongChip.Cell.Y);
         }
 
         private void NewGameStarted(object sender, NewGameEventArgs e)
@@ -152,8 +153,9 @@ namespace Assets.Scripts.View
 
         private void GameOver(object sender, GameOverEventArgs e)
         {
-            // TO DO
-            // disable cells wneh game is over so user can only press start new game
+            // disable cells when game is over so user can only press start new game
+            ClearAllowedCells();
+
             if (e.WinnerColor == null)
                 infoField.text = "played a draw!";
             else
@@ -163,7 +165,7 @@ namespace Assets.Scripts.View
 
         private void SetChips(object sender, SetChipsEventArgs e)
         {
-            Debug.Log(e.NewChip.Color.ToString());
+            //Debug.Log(e.NewChip.Color.ToString());
 
             AddChip(e.NewChip);
 
@@ -176,10 +178,10 @@ namespace Assets.Scripts.View
 
         private void SubscribeOnEvents()
         {
-            model.CountChanged += CountChanged;
             model.NewGameStarted += NewGameStarted;
-            model.GameOver += GameOver;
+            model.WrongMove += WrongMove;
             model.SetChips += SetChips;
+            model.GameOver += GameOver;
 
             if (currentMode == GameMode.HumanToHuman)
             {
@@ -191,13 +193,10 @@ namespace Assets.Scripts.View
                 // subscribe on switch move [opposite color] by method where {startcorutine()}
             }
 
-            model.WrongMove += WrongMove;
-
         }
-        // Start is called before the first frame update
-        void Start()
+
+        void Awake()
         {
-            model = holder.reversiModel;
             boardCells = new GameObject[boardSize, boardSize];
             existedChips = new GameObject[boardSize, boardSize];
             allowedCells = new GameObject[boardSize, boardSize];
@@ -206,10 +205,17 @@ namespace Assets.Scripts.View
 
             //ClearAll();
             playerColor = ReversiCore.Enums.Color.Black;
-            SubscribeOnEvents();
+
+            model = holder.reversiModel;
         }
 
-        // Update is called once per frame
+        void Start()
+        {
+            //model = holder.reversiModel;
+            SubscribeOnEvents();
+
+        }
+
         void Update()
         {
 
