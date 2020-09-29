@@ -7,15 +7,13 @@ namespace ReversiCore
 {
     internal class Board
     {
-        internal int Size { get; private set; }
-        internal Color?[,] Field { get; private set; }
+        internal Field BoardField { get; private set; }
 
         public List<Chip> StartChips { get; private set; }
 
         internal Board()
         {
-            Size = 8;
-            Field = new Color?[Size, Size];
+            BoardField = new Field();
 
             StartChips = new List<Chip>()
             {
@@ -30,11 +28,11 @@ namespace ReversiCore
 
         private void Clear()
         {
-            for (int i = 0; i < Size; i++)
+            for (int i = 0; i < BoardField.Size; i++)
             {
-                for (int j = 0; j < Size; j++)
+                for (int j = 0; j < BoardField.Size; j++)
                 {
-                    Field[i, j] = null;
+                    BoardField.PlacedChips[i, j] = null;
                 }
             }
         }
@@ -45,24 +43,24 @@ namespace ReversiCore
             
             foreach(Chip chip in StartChips)
             {
-                Field[chip.Cell.X, chip.Cell.Y] = chip.Color;
+                BoardField.PlacedChips[chip.Cell.X, chip.Cell.Y] = chip.Color;
             }
         }
 
         internal SortedSet<Cell> GetAllowedCells(Color currentPlayerColor)
         {
-            AllowedCellsSearcher allowedCellsSearcher = new AllowedCellsSearcher(this, currentPlayerColor); //Field, not this TODO
+            AllowedCellsSearcher allowedCellsSearcher = new AllowedCellsSearcher(BoardField, currentPlayerColor); //Field, not this TODO
             return allowedCellsSearcher.GetAllAllowedCells(currentPlayerColor);
         }
 
         internal void AddChip(Chip chip)
         {
-            Field[chip.Cell.X, chip.Cell.Y] = chip.Color;
+            BoardField.PlacedChips[chip.Cell.X, chip.Cell.Y] = chip.Color;
         }
 
         internal List<Chip> GetChangedChips(Chip newChip, Color currentPlayerColor)
         {
-            ChangedChipsSearcher changedChipsSearcher = new ChangedChipsSearcher(this, currentPlayerColor); //Field, not this TODO
+            ChangedChipsSearcher changedChipsSearcher = new ChangedChipsSearcher(BoardField, currentPlayerColor); //Field, not this TODO
             List<Chip> changedChips = changedChipsSearcher.GetAllChangedChips(newChip);
             RepaintChips(changedChips, currentPlayerColor);
             return changedChips;
@@ -74,7 +72,7 @@ namespace ReversiCore
             {
                 Chip chip = changedChips[i];
                 chip.Color = color;
-                Field[chip.Cell.X, chip.Cell.Y] = color;
+                BoardField.PlacedChips[chip.Cell.X, chip.Cell.Y] = color;
             }
         }
     }

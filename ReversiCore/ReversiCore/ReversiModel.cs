@@ -11,7 +11,7 @@ namespace ReversiCore
         private TurnHolder turnHolder;
         private Board board;
         private CountHolder countHolder;
-        public SortedSet<Cell> currentAllowedCells; //TODO private
+        private SortedSet<Cell> currentAllowedCells;
 
         public event EventHandler<NewGameEventArgs> NewGameStarted;
         public event EventHandler<SetChipsEventArgs> SetChips;

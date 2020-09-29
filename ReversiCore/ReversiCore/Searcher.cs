@@ -7,12 +7,12 @@ namespace ReversiCore
 {
     internal abstract class Searcher
     {
-        protected Board board;
+        protected Field field;
         protected Color playerColor;
 
-        internal Searcher(Board currentBoard, Color currentPlayerColor)
+        internal Searcher(Field currentField, Color currentPlayerColor)
         {
-            board = currentBoard;
+            field = currentField;
             playerColor = currentPlayerColor;
         }
 
@@ -36,7 +36,7 @@ namespace ReversiCore
                 return 7 - coordinate;
             }
 
-            int infinityDistance = board.Size;
+            int infinityDistance = field.Size;
             return infinityDistance;
         }
     }

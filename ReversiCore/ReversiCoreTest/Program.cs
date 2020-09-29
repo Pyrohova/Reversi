@@ -14,21 +14,11 @@ namespace ReversiCoreTest
             model.WrongMove += (s, ea) => 
             { 
                 Console.WriteLine("Wrong move");
-
-                foreach (Cell cell in model.currentAllowedCells)
-                {
-                    Console.WriteLine("{0} {1}", cell.X, cell.Y);
-                }
             };
             model.SwitchMove += (s, ea) => { Console.WriteLine("Switch move {0}", ea.CurrentPlayerColor); };
             model.SwitchMove += (s, ea) =>
             {
                 foreach (Cell cell in ea.AllowedCells)
-                {
-                    Console.WriteLine("{0} {1}", cell.X, cell.Y);
-                }
-                Console.WriteLine("-------------------");
-                foreach (Cell cell in model.currentAllowedCells)
                 {
                     Console.WriteLine("{0} {1}", cell.X, cell.Y);
                 }

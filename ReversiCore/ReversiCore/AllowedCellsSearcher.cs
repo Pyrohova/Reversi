@@ -8,18 +8,18 @@ namespace ReversiCore
 {
     internal class AllowedCellsSearcher : Searcher
     {
-        internal AllowedCellsSearcher(Board currentBoard, Color currentPlayerColor)
-            : base(currentBoard, currentPlayerColor) { }
+        internal AllowedCellsSearcher(Field currentField, Color currentPlayerColor)
+            : base(currentField, currentPlayerColor) { }
 
         internal SortedSet<Cell> GetAllAllowedCells(Color currentPlayerColor)
         {
             SortedSet<Cell> AllAllowedCells = new SortedSet<Cell>();
 
-            for (int i = 0; i < board.Size; i++)
+            for (int i = 0; i < field.Size; i++)
             { 
-                for (int j = 0; j < board.Size; j++)
+                for (int j = 0; j < field.Size; j++)
                 {
-                    if (board.Field[i, j] == currentPlayerColor)
+                    if (field.PlacedChips[i, j] == currentPlayerColor)
                     {
                         IEnumerable<Cell> NewAllowedCells = GetAllowedCellsForCell(new Cell(i, j));
                         AllAllowedCells.UnionWith(NewAllowedCells);
@@ -49,12 +49,12 @@ namespace ReversiCore
                         currentX += stepX;
                         currentY += stepY;
 
-                        if (board.Field[currentX, currentY] == playerColor)
+                        if (field.PlacedChips[currentX, currentY] == playerColor)
                         {
                             break;
                         }
 
-                        if (board.Field[currentX, currentY] == null)
+                        if (field.PlacedChips[currentX, currentY] == null)
                         {
                             if (distance > 1)
                             {

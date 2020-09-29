@@ -5,8 +5,8 @@ namespace ReversiCore
 {
     internal class ChangedChipsSearcher : Searcher
     {
-        internal ChangedChipsSearcher(Board currentBoard, Color currentPlayerColor)
-            : base(currentBoard, currentPlayerColor) { }
+        internal ChangedChipsSearcher(Field currentField, Color currentPlayerColor)
+            : base(currentField, currentPlayerColor) { }
 
         internal List<Chip> GetAllChangedChips(Chip chip)
         {
@@ -27,12 +27,12 @@ namespace ReversiCore
                         currentX += stepX;
                         currentY += stepY;
 
-                        if (board.Field[currentX, currentY] == null)
+                        if (field.PlacedChips[currentX, currentY] == null)
                         {
                             break;
                         }
 
-                        if (board.Field[currentX, currentY] == playerColor)
+                        if (field.PlacedChips[currentX, currentY] == playerColor)
                         {
                             ChangedChips.AddRange(GetListOfChipsInRow(chip.Cell, stepX, stepY, distance));
                             break;
