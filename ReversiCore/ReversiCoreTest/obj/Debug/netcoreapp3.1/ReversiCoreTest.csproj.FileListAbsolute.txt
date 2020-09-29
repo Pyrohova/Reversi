@@ -14,3 +14,5 @@ C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCoreTest\obj\De
 C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCoreTest\obj\Debug\netcoreapp3.1\ReversiCoreTest.dll
 C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCoreTest\obj\Debug\netcoreapp3.1\ReversiCoreTest.pdb
 C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCoreTest\obj\Debug\netcoreapp3.1\ReversiCoreTest.genruntimeconfig.cache
+C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCoreTest\bin\Debug\netcoreapp3.1\ReversiRobot.dll
+C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCoreTest\bin\Debug\netcoreapp3.1\ReversiRobot.pdb

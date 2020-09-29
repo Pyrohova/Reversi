@@ -9,4 +9,10 @@
     <ProjectReference Include="..\ReversiCore\ReversiCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="ReversiRobot">
+      <HintPath>..\..\ReversiRobot\ReversiRobot\bin\Debug\netstandard2.0\ReversiRobot.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
