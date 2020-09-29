@@ -53,7 +53,7 @@ namespace ReversiCore
 
             List<Chip> chips = new List<Chip>();
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < length - 1; i++)
             {
                 currentX += stepX;
                 currentY += stepY;

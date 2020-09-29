@@ -36,6 +36,11 @@ namespace ReversiCore
 
             if (newGameMode == GameMode.HumanToRobot)
             {
+                if (userPlayerColor == null)
+                {
+                    userPlayerColor = turnHolder.FirstTurnColor;
+                }
+
                 SetRobotColor(userPlayerColor);
             }
             else
@@ -101,7 +106,7 @@ namespace ReversiCore
 
         private void SwitchTurn()
         {
-            //TODO
+            //TODO put here duplicate from NewGame and PutChip
         }
 
         private void SetStartBoardPosition()
@@ -116,11 +121,6 @@ namespace ReversiCore
 
         private void SetRobotColor(Color? userPlayerColor)
         {
-            if (userPlayerColor == null)
-            {
-                //TODO
-            }
-
             Color robotColor = Color.White;
 
             if (userPlayerColor == Color.White)

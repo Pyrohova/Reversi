@@ -33,6 +33,7 @@ namespace ReversiCoreTest
                     Console.WriteLine("{0} {1}", cell.X, cell.Y);
                 }
             };
+            model.CountChanged += (s, ea) => { Console.WriteLine("count {0} {1}", ea.CountBlack, ea.CountWhite); };
 
             model.NewGame(GameMode.HumanToHuman);
 
@@ -88,7 +89,6 @@ namespace ReversiCoreTest
         static void Main(string[] args)
         {
             Test1();
-            
         }
     }
 }
