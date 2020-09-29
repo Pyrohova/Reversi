@@ -36,8 +36,8 @@ namespace ReversiCore
                 return 7 - coordinate;
             }
 
-            //"infinity"
-            return board.Size;
+            int infinityDistance = board.Size;
+            return infinityDistance;
         }
     }
 }
