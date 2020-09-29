@@ -1,10 +1,13 @@
 ﻿using ReversiCore;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts.Model;
 using ReversiCore.Enums;
 using System;
+
+using ChipColor = ReversiCore.Enums.Color;
 
 namespace Assets.Scripts.View
 {
@@ -34,7 +37,7 @@ namespace Assets.Scripts.View
 
         private GameMode currentMode;
 
-        private ReversiCore.Enums.Color playerColor;
+        private ChipColor playerColor;
 
         public void ClearAll()
         {
@@ -54,7 +57,7 @@ namespace Assets.Scripts.View
         {
                 GameObject chipToCreate;
 
-                if (newChip.Color == ReversiCore.Enums.Color.Black)
+                if (newChip.Color == ChipColor.Black)
                     chipToCreate = blackChip;
                 else
                     chipToCreate = whiteChip;
@@ -100,18 +103,26 @@ namespace Assets.Scripts.View
 
         private void SwitchTurn(object sender, SwitchMoveEventArgs e)
         {
+            currentTurn.text = e.CurrentPlayerColor.ToString();
+
+            if (e.CurrentPlayerColor != playerColor)
+            {
+                //DelayRobotTurn();
+                return;
+            }
             // remove previous allowed cells
             ClearAllowedCells();
+
+
+            string result = "";
 
             // create new
             foreach (Cell allowedCell in e.AllowedCells)
             {
                 AllowCell(allowedCell);
+                result += allowedCell.X +""+ allowedCell.Y + ", ";
             }
-
-            //change turn
-            playerColor = e.CurrentPlayerColor;
-            currentTurn.text = e.CurrentPlayerColor.ToString();
+            Debug.Log(result);
 
         }
 
@@ -147,8 +158,12 @@ namespace Assets.Scripts.View
             if (e.NewGameMode == GameMode.HumanToHuman)
                 infoField.text = "new game with second player started";
             else
+            {
                 infoField.text = "new game with robot started";
+                playerColor = (ChipColor)e.UserPlayerColor;
+            }
             currentMode = e.NewGameMode;
+            
         }
 
         private void GameOver(object sender, GameOverEventArgs e)
@@ -176,23 +191,25 @@ namespace Assets.Scripts.View
             }
         }
 
+        private IEnumerator DelayRobot()
+        {
+            yield return new WaitForSeconds(3f);
+        }
+
+        private void DelayRobotTurn()
+        {
+            StartCoroutine(DelayRobot());
+        }
+
         private void SubscribeOnEvents()
         {
             model.NewGameStarted += NewGameStarted;
             model.WrongMove += WrongMove;
             model.SetChips += SetChips;
             model.GameOver += GameOver;
+            model.SwitchMove += SwitchTurn;
+            model.CountChanged += CountChanged;
 
-            if (currentMode == GameMode.HumanToHuman)
-            {
-                model.SwitchMove[ReversiCore.Enums.Color.Black] += SwitchTurn;
-                model.SwitchMove[ReversiCore.Enums.Color.White] += SwitchTurn;
-            } else
-            {
-                model.SwitchMove[playerColor] += SwitchTurn;
-                // TO DO
-                // aad subscribe on switch move [opposite color] by method where {startcorutine()}
-            }
 
         }
 
@@ -205,7 +222,7 @@ namespace Assets.Scripts.View
             GenerateBoard();
 
             //ClearAll();
-            //playerColor = ReversiCore.Enums.Color.Black;
+            //playerColor = ChipColor.Black;
 
             model = holder.reversiModel;
             SubscribeOnEvents();
