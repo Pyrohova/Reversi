@@ -10,10 +10,21 @@ namespace ReversiCore
         internal int Size { get; private set; }
         internal Color?[,] Field { get; private set; }
 
+        public List<Chip> StartChips { get; private set; }
+
         internal Board()
         {
             Size = 8;
             Field = new Color?[Size, Size];
+
+            StartChips = new List<Chip>()
+            {
+                new Chip(Color.White, new Cell(3, 3)),
+                new Chip(Color.White, new Cell(4, 4)),
+                new Chip(Color.Black, new Cell(3, 4)),
+                new Chip(Color.Black, new Cell(4, 3))
+            };
+
             Clear();
         }
 
@@ -28,11 +39,11 @@ namespace ReversiCore
             }
         }
 
-        internal void SetStartPosition(IEnumerable<Chip> startChips)
+        internal void SetStartPosition()
         {
             Clear();
             
-            foreach(Chip chip in startChips)
+            foreach(Chip chip in StartChips)
             {
                 Field[chip.Cell.X, chip.Cell.Y] = chip.Color;
             }

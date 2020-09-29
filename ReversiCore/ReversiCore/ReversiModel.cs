@@ -89,18 +89,7 @@ namespace ReversiCore
 
         private void SetStartBoardPosition()
         {
-            //TODO убрать дублирование с Board
-            List<Chip> startChips = new List<Chip>()
-            {
-                new Chip(Color.White, new Cell(3, 3)),
-                new Chip(Color.White, new Cell(4, 4)),
-                new Chip(Color.Black, new Cell(3, 4)),
-                new Chip(Color.Black, new Cell(4, 3))
-            };
-
-            board.SetStartPosition(startChips);
-
-            foreach(Chip chip in startChips)
+            foreach(Chip chip in board.StartChips)
             {
                 SetChips?.Invoke(this, new SetChipsEventArgs { NewChip = chip, ChangedChips = new List<Chip>() });
             }
