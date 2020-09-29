@@ -22,9 +22,14 @@ public class HumanController : MonoBehaviour
 
     }
 
-    public void NewGameWithRobot()
+    public void NewGameWithRobotAsWhite()
     {
-        model.NewGame(GameMode.HumanToRobot);
+        model.NewGame(GameMode.HumanToRobot, ReversiCore.Enums.Color.White);
+    }
+
+    public void NewGameWithRobotAsBlack()
+    {
+        model.NewGame(GameMode.HumanToRobot, ReversiCore.Enums.Color.Black);
     }
 
     public void NewGameWithSecondPlayer()

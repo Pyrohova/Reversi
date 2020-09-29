@@ -190,12 +190,13 @@ namespace Assets.Scripts.View
             } else
             {
                 model.SwitchMove[playerColor] += SwitchTurn;
-                // subscribe on switch move [opposite color] by method where {startcorutine()}
+                // TO DO
+                // aad subscribe on switch move [opposite color] by method where {startcorutine()}
             }
 
         }
 
-        void Awake()
+        void Start()
         {
             boardCells = new GameObject[boardSize, boardSize];
             existedChips = new GameObject[boardSize, boardSize];
@@ -204,14 +205,9 @@ namespace Assets.Scripts.View
             GenerateBoard();
 
             //ClearAll();
-            playerColor = ReversiCore.Enums.Color.Black;
+            //playerColor = ReversiCore.Enums.Color.Black;
 
             model = holder.reversiModel;
-        }
-
-        void Start()
-        {
-            //model = holder.reversiModel;
             SubscribeOnEvents();
 
         }
