@@ -24,4 +24,3 @@ C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCore\obj\Debug\
 C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.csproj.CoreCompileInputs.cache
 C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.dll
 C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.pdb
-C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiCore\ReversiCore\obj\Debug\netstandard2.0\ReversiCore.csprojAssemblyReference.cache

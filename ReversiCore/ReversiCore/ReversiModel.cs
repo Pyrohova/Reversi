@@ -54,20 +54,7 @@ namespace ReversiCore
 
             countHolder.Reset();
 
-            CountChanged?.Invoke(this, new CountChangedEventArgs
-            {
-                CountWhite = countHolder.GetPlayerCount(Color.White),
-                CountBlack = countHolder.GetPlayerCount(Color.Black),
-            });
-
-            CalculateAllowedCells();
-
-            if (currentAllowedCells.Count == 0)
-            {
-                return;
-            }
-
-            SwitchMove?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowedCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
+            SwitchMovePrepareAndInvoke();
         }
         
         public void PutChip(int x, int y)
@@ -86,13 +73,19 @@ namespace ReversiCore
             countHolder.Decrease(turnHolder.OppositeTurnColor, changedChips.Count);
 
             SetChips?.Invoke(this, new SetChipsEventArgs { NewChip = newChip, ChangedChips = changedChips });
+
+            turnHolder.Switch();
+
+            SwitchMovePrepareAndInvoke();
+        }
+
+        private void SwitchMovePrepareAndInvoke()
+        {
             CountChanged?.Invoke(this, new CountChangedEventArgs
             {
                 CountWhite = countHolder.GetPlayerCount(Color.White),
                 CountBlack = countHolder.GetPlayerCount(Color.Black),
             });
-
-            turnHolder.Switch();
 
             CalculateAllowedCells();
 
@@ -100,13 +93,8 @@ namespace ReversiCore
             {
                 return;
             }
-            
-            SwitchMove?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowedCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
-        }
 
-        private void SwitchTurn()
-        {
-            //TODO put here duplicate from NewGame and PutChip
+            SwitchMove?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowedCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
         }
 
         private void SetStartBoardPosition()
