@@ -6,5 +6,6 @@ namespace ReversiCore
     public class NewGameEventArgs : EventArgs
     {
         public GameMode NewGameMode { get; set; }
+        public Color? UserPlayerColor { get; set; }
     }
 }

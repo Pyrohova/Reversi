@@ -41,7 +41,7 @@ namespace ReversiCore
                 SetRobotColor(userPlayerColor);
             }
             
-            NewGameStarted?.Invoke(this, new NewGameEventArgs{ NewGameMode = newGameMode });
+            NewGameStarted?.Invoke(this, new NewGameEventArgs{ NewGameMode = newGameMode, UserPlayerColor = userPlayerColor });
 
             SetStartBoardPosition();
 
