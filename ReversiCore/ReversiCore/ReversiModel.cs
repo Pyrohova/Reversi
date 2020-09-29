@@ -10,15 +10,16 @@ namespace ReversiCore
         private TurnHolder turnHolder;
         private Board board;
         private CountHolder countHolder;
-        public SortedSet<Cell> currentAllowedCells; //TODO private
+        private SortedSet<Cell> currentAllowedCells; 
 
         public event EventHandler<NewGameEventArgs> NewGameStarted;
         public event EventHandler<SetChipsEventArgs> SetChips;
+        public event EventHandler<SwitchMoveEventArgs> SwitchMove;
         public event EventHandler<WrongMoveEventArgs> WrongMove;
         public event EventHandler<CountChangedEventArgs> CountChanged;
         public event EventHandler<GameOverEventArgs> GameOver;
         public event EventHandler<RobotColorSetEventArgs> RobotColorSet;
-        public Dictionary<Color, EventHandler<SwitchMoveEventArgs>> SwitchMove { get; set; }
+        public event EventHandler RobotDisabled;
         
         public ReversiModel()
         {
@@ -26,10 +27,6 @@ namespace ReversiCore
             board = new Board();
             currentAllowedCells = new SortedSet<Cell>();
             countHolder = new CountHolder();
-
-            SwitchMove = new Dictionary<Color, EventHandler<SwitchMoveEventArgs>>();
-            SwitchMove[Color.White] = null;
-            SwitchMove[Color.Black] = null;
         }
 
         public void NewGame(GameMode newGameMode, Color? userPlayerColor = null)
@@ -39,6 +36,10 @@ namespace ReversiCore
             if (newGameMode == GameMode.HumanToRobot)
             {
                 SetRobotColor(userPlayerColor);
+            }
+            else
+            {
+                RobotDisabled?.Invoke(this, new EventArgs());
             }
             
             NewGameStarted?.Invoke(this, new NewGameEventArgs{ NewGameMode = newGameMode, UserPlayerColor = userPlayerColor });
@@ -60,7 +61,7 @@ namespace ReversiCore
                 return;
             }
 
-            SwitchMove[turnHolder.CurrentTurnColor]?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowedCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
+            SwitchMove?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowedCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
         }
         
         public void PutChip(int x, int y)
@@ -94,7 +95,7 @@ namespace ReversiCore
                 return;
             }
             
-            SwitchMove[turnHolder.CurrentTurnColor]?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowedCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
+            SwitchMove?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowedCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
         }
 
         private void SwitchTurn()

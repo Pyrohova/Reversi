@@ -10,16 +10,22 @@ namespace ReversiRobot
     {
         private Random rand;
         private ReversiModel model;
-        private Color currentColor;
+        private Color? currentColor;
 
         public RandomUser(ReversiModel reversiModel)
         {
             rand = new Random();
 
+            Disable();
+
             model = reversiModel;
 
             model.RobotColorSet +=
-                (sender, eventArgs) => ChangeColor(eventArgs.RobotColor);
+                (sender, eventArgs) => { currentColor = eventArgs.RobotColor; };
+
+            model.RobotDisabled += (s, eventArgs) => { Disable(); };
+
+            model.SwitchMove += OnSwitchMove;
         }
 
         internal void MakeMove(SortedSet<Cell> allowedCells)
@@ -31,23 +37,17 @@ namespace ReversiRobot
             model.PutChip(currentMoveCell.X, currentMoveCell.Y);
         }
 
-        private void ChangeColor(Color newCurrentColor)
-        {
-            if (currentColor == newCurrentColor)
-            {
-                return;
-            }
-
-            model.SwitchMove[currentColor] -= OnSwitchMove;
-
-            currentColor = newCurrentColor;
-
-            model.SwitchMove[currentColor] += OnSwitchMove;
-        }
-
         private void OnSwitchMove(object sender, SwitchMoveEventArgs eventArgs)
         {
-            MakeMove(eventArgs.AllowedCells);
+            if (eventArgs.CurrentPlayerColor == currentColor)
+            {
+                MakeMove(eventArgs.AllowedCells);
+            }
+        }
+
+        private void Disable()
+        {
+            currentColor = null;
         }
     }
 }

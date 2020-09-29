@@ -8,9 +8,11 @@ namespace ReversiCore.Interfaces
     {
         event EventHandler<NewGameEventArgs> NewGameStarted;
         event EventHandler<SetChipsEventArgs> SetChips;
+        event EventHandler<SwitchMoveEventArgs> SwitchMove;
         event EventHandler<WrongMoveEventArgs> WrongMove;
         event EventHandler<CountChangedEventArgs> CountChanged;
         event EventHandler<GameOverEventArgs> GameOver;
-        Dictionary<Color, EventHandler<SwitchMoveEventArgs>> SwitchMove { get; set; }
+        event EventHandler RobotDisabled;
+        event EventHandler<RobotColorSetEventArgs> RobotColorSet;
     }
 }

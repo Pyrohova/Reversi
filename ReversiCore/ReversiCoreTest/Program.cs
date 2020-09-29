@@ -12,18 +12,9 @@ namespace ReversiCoreTest
             ReversiModel model = new ReversiModel();
 
             model.WrongMove += (s, ea) => { Console.WriteLine("Wrong move"); };
-            model.SwitchMove[Color.White] += (s, ea) => { Console.WriteLine("Switch move {0}", ea.CurrentPlayerColor); };
-            model.SwitchMove[Color.Black] += (s, ea) => { Console.WriteLine("Switch move {0}", ea.CurrentPlayerColor); };
-            model.SwitchMove[Color.White] += (s, ea) =>
+            model.SwitchMove += (s, ea) => { Console.WriteLine("Switch move {0}", ea.CurrentPlayerColor); };
+            model.SwitchMove += (s, ea) =>
             {
-                foreach (Cell cell in ea.AllowedCells)
-                {
-                    Console.WriteLine("{0} {1}", cell.X, cell.Y);
-                }
-            };
-            model.SwitchMove[Color.Black] += (s, ea) =>
-            {
-                Console.WriteLine(ea.AllowedCells.Count);
                 foreach (Cell cell in ea.AllowedCells)
                 {
                     Console.WriteLine("{0} {1}", cell.X, cell.Y);
@@ -40,8 +31,8 @@ namespace ReversiCoreTest
             ReversiModel model = new ReversiModel();
             RandomUser robot = new RandomUser(model);
 
-            model.SwitchMove[Color.Black] += (s, ea) => { Console.WriteLine("Switch move {0}", ea.CurrentPlayerColor); };
-            model.SwitchMove[Color.Black] += (s, ea) =>
+            model.SwitchMove += (s, ea) => { Console.WriteLine("Switch move {0}", ea.CurrentPlayerColor); };
+            model.SwitchMove += (s, ea) =>
             {
                 Console.WriteLine(ea.AllowedCells.Count);
                 foreach (Cell cell in ea.AllowedCells)
@@ -53,10 +44,30 @@ namespace ReversiCoreTest
             model.NewGame(GameMode.HumanToRobot, Color.Black);
         }
 
+        //Test robot mode (color you want)
+        static void Test3(Color userColor)
+        {
+            ReversiModel model = new ReversiModel();
+            RandomUser robot = new RandomUser(model);
+
+            model.NewGameStarted += (s, ea) => { Console.WriteLine(ea.UserPlayerColor); };
+            model.SwitchMove += (s, ea) => { Console.WriteLine("Switch move {0}", ea.CurrentPlayerColor); };
+            model.SwitchMove += (s, ea) =>
+            {
+                Console.WriteLine(ea.AllowedCells.Count);
+                foreach (Cell cell in ea.AllowedCells)
+                {
+                    Console.WriteLine("{0} {1}", cell.X, cell.Y);
+                }
+            };
+
+            model.NewGame(GameMode.HumanToRobot, userColor);
+        }
+
 
         static void Main(string[] args)
         {
-            Test2();
+            Test3(Color.Black);
         }
     }
 }
