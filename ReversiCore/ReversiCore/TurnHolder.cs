@@ -7,7 +7,7 @@ namespace ReversiCore
 {
     internal class TurnHolder
     {
-        private readonly Color firstTurnColor;
+        public Color FirstTurnColor { get; private set; }
         private Color _currentTurnColor;
 
         internal Color CurrentTurnColor 
@@ -36,13 +36,13 @@ namespace ReversiCore
 
         internal TurnHolder()
         {
-            firstTurnColor = Color.Black;
+            FirstTurnColor = Color.Black;
             Reset();
         }
 
         internal void Reset()
         {
-            CurrentTurnColor = firstTurnColor;
+            CurrentTurnColor = FirstTurnColor;
         }
 
         internal void Switch()
