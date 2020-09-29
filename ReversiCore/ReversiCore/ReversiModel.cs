@@ -2,6 +2,7 @@
 using ReversiCore.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ReversiCore
 {
@@ -10,7 +11,7 @@ namespace ReversiCore
         private TurnHolder turnHolder;
         private Board board;
         private CountHolder countHolder;
-        private SortedSet<Cell> currentAllowedCells; 
+        public SortedSet<Cell> currentAllowedCells; //TODO private
 
         public event EventHandler<NewGameEventArgs> NewGameStarted;
         public event EventHandler<SetChipsEventArgs> SetChips;
@@ -132,13 +133,26 @@ namespace ReversiCore
 
         private bool NewChipAllowed(Chip chip)
         {
-            if (chip.Color != turnHolder.CurrentTurnColor || !currentAllowedCells.Contains(chip.Cell))
+            if (chip.Color != turnHolder.CurrentTurnColor || !CellIsAllowed(chip.Cell))
             {
                 WrongMove?.Invoke(this, new WrongMoveEventArgs { WrongChip = chip });
                 return false;
             }
 
             return true;
+        }
+
+        private bool CellIsAllowed(Cell cell)
+        {
+            foreach (Cell curAllowedCell in currentAllowedCells)
+            {
+                if (cell.Equals(curAllowedCell))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void CalculateAllowedCells()
