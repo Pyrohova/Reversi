@@ -10,7 +10,7 @@ namespace ReversiCore
         private TurnHolder turnHolder;
         private Board board;
         private CountHolder countHolder;
-        private SortedSet<Cell> currentAllowedCells;
+        public SortedSet<Cell> currentAllowedCells; //TODO private
 
         public event EventHandler<NewGameEventArgs> NewGameStarted;
         public event EventHandler<SetChipsEventArgs> SetChips;
@@ -55,6 +55,11 @@ namespace ReversiCore
 
             CalculateAllowedCells();
 
+            if (currentAllowedCells.Count == 0)
+            {
+                return;
+            }
+
             SwitchMove[turnHolder.CurrentTurnColor]?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowedCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
         }
         
@@ -83,12 +88,24 @@ namespace ReversiCore
             turnHolder.Switch();
 
             CalculateAllowedCells();
+
+            if (currentAllowedCells.Count == 0)
+            {
+                return;
+            }
             
             SwitchMove[turnHolder.CurrentTurnColor]?.Invoke(this, new SwitchMoveEventArgs { AllowedCells = currentAllowedCells, CurrentPlayerColor = turnHolder.CurrentTurnColor });
         }
 
+        private void SwitchTurn()
+        {
+            //TODO
+        }
+
         private void SetStartBoardPosition()
         {
+            board.SetStartPosition();
+
             foreach(Chip chip in board.StartChips)
             {
                 SetChips?.Invoke(this, new SetChipsEventArgs { NewChip = chip, ChangedChips = new List<Chip>() });
@@ -125,15 +142,12 @@ namespace ReversiCore
 
         private void CalculateAllowedCells()
         {
-            SortedSet<Cell> allowedCells = board.GetAllowedCells(turnHolder.CurrentTurnColor);
+            currentAllowedCells = board.GetAllowedCells(turnHolder.CurrentTurnColor);
 
-            if (allowedCells.Count == 0)
+            if (currentAllowedCells.Count == 0)
             {
                 EndGame();
-                return;
             }
-
-            currentAllowedCells = allowedCells;
         }
 
         private void EndGame()

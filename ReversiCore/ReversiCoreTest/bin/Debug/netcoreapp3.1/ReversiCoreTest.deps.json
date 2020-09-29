@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "ReversiCoreTest/1.0.0": {
+        "dependencies": {
+          "ReversiCore": "1.0.0"
+        },
+        "runtime": {
+          "ReversiCoreTest.dll": {}
+        }
+      },
+      "ReversiCore/1.0.0": {
+        "runtime": {
+          "ReversiCore.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ReversiCoreTest/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ReversiCore/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

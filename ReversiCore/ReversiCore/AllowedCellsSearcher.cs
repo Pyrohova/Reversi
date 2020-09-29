@@ -54,9 +54,13 @@ namespace ReversiCore
                             break;
                         }
 
-                        if (board.Field[currentX, currentY] == null && distance > 1)
+                        if (board.Field[currentX, currentY] == null)
                         {
-                            AllowedCells.Add(new Cell(currentX, currentY));
+                            if (distance > 1)
+                            {
+                                AllowedCells.Add(new Cell(currentX, currentY));
+                            }
+
                             break;
                         }
 
