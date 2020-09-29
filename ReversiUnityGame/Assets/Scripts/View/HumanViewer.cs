@@ -103,13 +103,23 @@ namespace Assets.Scripts.View
 
         private void SwitchTurn(object sender, SwitchMoveEventArgs e)
         {
-            currentTurn.text = e.CurrentPlayerColor.ToString();
+            if (currentMode == GameMode.HumanToRobot)
+            {
+                if (e.CurrentPlayerColor == ChipColor.Black)
+                    currentTurn.text = "White";
+                else
+                    currentTurn.text = "Black";
+            } else
+            {
+                currentTurn.text = e.CurrentPlayerColor.ToString();
+            }
 
-            if (e.CurrentPlayerColor != playerColor)
+            if ( (e.CurrentPlayerColor != playerColor) && (currentMode == GameMode.HumanToRobot) )
             {
                 //DelayRobotTurn();
                 return;
             }
+
             // remove previous allowed cells
             ClearAllowedCells();
 
@@ -180,8 +190,6 @@ namespace Assets.Scripts.View
 
         private void SetChips(object sender, SetChipsEventArgs e)
         {
-            //Debug.Log(e.NewChip.Color.ToString());
-
             AddChip(e.NewChip);
 
             foreach (Chip chip in e.ChangedChips)
@@ -191,15 +199,6 @@ namespace Assets.Scripts.View
             }
         }
 
-        private IEnumerator DelayRobot()
-        {
-            yield return new WaitForSeconds(3f);
-        }
-
-        private void DelayRobotTurn()
-        {
-            StartCoroutine(DelayRobot());
-        }
 
         private void SubscribeOnEvents()
         {
@@ -222,7 +221,6 @@ namespace Assets.Scripts.View
             GenerateBoard();
 
             //ClearAll();
-            //playerColor = ChipColor.Black;
 
             model = holder.reversiModel;
             SubscribeOnEvents();
