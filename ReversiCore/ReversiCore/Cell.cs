@@ -2,7 +2,7 @@
 
 namespace ReversiCore
 {
-    public class Cell : IComparable<Cell>
+    public class Cell : IComparable<Cell>, IEquatable<Cell>
     {
         public int X { get; private set; }
         public int Y { get; private set; }
@@ -26,6 +26,16 @@ namespace ReversiCore
             }
 
             return 1;
+        }
+
+        public bool Equals(Cell other)
+        {
+            if (this.X == other.X && this.Y == other.Y)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

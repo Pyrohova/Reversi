@@ -11,7 +11,15 @@ namespace ReversiCoreTest
         {
             ReversiModel model = new ReversiModel();
 
-            model.WrongMove += (s, ea) => { Console.WriteLine("Wrong move"); };
+            model.WrongMove += (s, ea) => 
+            { 
+                Console.WriteLine("Wrong move");
+
+                foreach (Cell cell in model.currentAllowedCells)
+                {
+                    Console.WriteLine("{0} {1}", cell.X, cell.Y);
+                }
+            };
             model.SwitchMove += (s, ea) => { Console.WriteLine("Switch move {0}", ea.CurrentPlayerColor); };
             model.SwitchMove += (s, ea) =>
             {
@@ -19,10 +27,21 @@ namespace ReversiCoreTest
                 {
                     Console.WriteLine("{0} {1}", cell.X, cell.Y);
                 }
+                Console.WriteLine("-------------------");
+                foreach (Cell cell in model.currentAllowedCells)
+                {
+                    Console.WriteLine("{0} {1}", cell.X, cell.Y);
+                }
             };
 
             model.NewGame(GameMode.HumanToHuman);
-            //model.PutChip(2, 3);
+
+            while (true)
+            {
+                int x = int.Parse(Console.ReadLine());
+                int y = int.Parse(Console.ReadLine());
+                model.PutChip(x, y);
+            }
         }
 
         //Test robot mode (black)
@@ -42,6 +61,7 @@ namespace ReversiCoreTest
             };
 
             model.NewGame(GameMode.HumanToRobot, Color.Black);
+
         }
 
         //Test robot mode (color you want)
@@ -67,7 +87,8 @@ namespace ReversiCoreTest
 
         static void Main(string[] args)
         {
-            Test3(Color.Black);
+            Test1();
+            
         }
     }
 }
