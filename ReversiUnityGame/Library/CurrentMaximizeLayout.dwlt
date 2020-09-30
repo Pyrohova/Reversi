@@ -21,10 +21,10 @@ MonoBehaviour:
     y: 30
     width: 1440
     height: 716
-  m_MinSize: {x: 679, y: 342}
-  m_MaxSize: {x: 12004, y: 8042}
+  m_MinSize: {x: 678, y: 342}
+  m_MaxSize: {x: 12003, y: 8042}
   vertical: 0
-  controlID: 92
+  controlID: 2059
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 342}
   m_MaxSize: {x: 8003, y: 8042}
   vertical: 1
-  controlID: 93
+  controlID: 2060
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -166,7 +166,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 221}
   m_MaxSize: {x: 8003, y: 4021}
   vertical: 0
-  controlID: 94
+  controlID: 2061
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -222,9 +222,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 3a390000
-      m_LastClickedID: 14650
-      m_ExpandedIDs: 20fbffff
+      m_SelectedIDs: 34390000
+      m_LastClickedID: 14644
+      m_ExpandedIDs: 20fbfffffe380000183900001c3900004c39000060390000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -267,8 +267,8 @@ MonoBehaviour:
     y: 0
     width: 864
     height: 400
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 221}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 2}
   m_Panes:
   - {fileID: 8}
@@ -312,9 +312,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -756.2598, y: 591.6384, z: -278194.7}
+    m_Target: {x: -226.02394, y: 158.09947, z: -278245.16}
     speed: 2
-    m_Value: {x: -756.2598, y: 591.6384, z: -278194.7}
+    m_Value: {x: -226.02394, y: 158.09947, z: -278245.16}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -364,9 +364,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 142.49922
+    m_Target: 177.73723
     speed: 2
-    m_Value: 142.49922
+    m_Value: 177.73723
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -466,9 +466,9 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 482.4
-    width: 1224
-    height: 301
+    y: 480
+    width: 1147
+    height: 295
   m_ViewDataDictionary: {fileID: 0}
   m_SearchFilter:
     m_NameFilter: 
@@ -483,20 +483,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Libraries
+    - Assets/Scripts/Controller
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Libraries
+  - Assets/Scripts/Controller
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiUnityGame
+  m_LastProjectPath: /Users/sofiapirogova/Documents/Labs/Games/Reversi/ReversiUnityGame
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: a4390000
-    m_LastClickedID: 14756
-    m_ExpandedIDs: 00000000a6390000a8390000
+    m_SelectedIDs: d4430000
+    m_LastClickedID: 17364
+    m_ExpandedIDs: 00000000a6390000a839000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -524,7 +524,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000a6390000a8390000
+    m_ExpandedIDs: 00000000a6390000a839000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -549,8 +549,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: a4390000
-    m_LastClickedInstanceID: 14756
+    m_SelectedInstanceIDs: 5a350000
+    m_LastClickedInstanceID: 13658
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c62300002c44000000000000
     m_RenameOverlay:
@@ -669,4 +669,4 @@ MonoBehaviour:
     m_PrefName: Preview_InspectorPreview
   m_PreviewWindow: {fileID: 0}
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 0
+  m_LastVerticalScrollValue: 169
