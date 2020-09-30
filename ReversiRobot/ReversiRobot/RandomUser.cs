@@ -42,7 +42,6 @@ namespace ReversiRobot
         {
             if (eventArgs.CurrentPlayerColor == currentColor)
             {
-                Thread.Sleep(2000);
                 MakeMove(eventArgs.AllowedCells);
             }
         }
