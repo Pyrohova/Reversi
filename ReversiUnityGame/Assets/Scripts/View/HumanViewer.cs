@@ -106,49 +106,52 @@ namespace Assets.Scripts.View
         }
 
 
-        private void SwitchTurn(object sender, SwitchMoveEventArgs e)
+        private void SwitchTurn(IEnumerable<Cell> allowedCells, ChipColor currentPlayerColor)
         {
             if (currentMode == GameMode.HumanToRobot)
             {
-                if (e.CurrentPlayerColor == ChipColor.Black)
+                if (currentPlayerColor == ChipColor.Black)
                     currentTurn.text = "White";
                 else
                     currentTurn.text = "Black";
             } else
             {
-                currentTurn.text = e.CurrentPlayerColor.ToString();
+                currentTurn.text = currentPlayerColor.ToString();
             }
 
             //actual only  if player vs  robot
             //if it's not player's turn, make delay for robot
-            if ( (e.CurrentPlayerColor != playerColor) && (currentMode == GameMode.HumanToRobot) )
+            if ( (currentPlayerColor != playerColor) && (currentMode == GameMode.HumanToRobot) )
             {
-                //DelayRobotTurn();
-                timerIsActive = true;
+                DelayForRobot(allowedCells, currentPlayerColor);
+                return;
+            }
+            string result = "";
+            // create new
+            foreach (Cell allowedCell in allowedCells)
+            {
+                result += allowedCell.X + "" + allowedCell.Y + ", ";
+                AllowCell(allowedCell);
+            }
+            Debug.Log(result);
+        }
+
+        private void SwitchMoveConsideringUserType(object sender, SwitchMoveEventArgs e)
+        {
+            if ((e.CurrentPlayerColor == playerColor) || (currentMode == GameMode.HumanToHuman))
+            {
+                SwitchTurn(e.AllowedCells, e.CurrentPlayerColor);
                 return;
             }
 
-            // remove previous allowed cells
-            ClearAllowedCells();
-
-            // create new
-            foreach (Cell allowedCell in e.AllowedCells)
-            {
-                AllowCell(allowedCell);
-            }
-
+            StartCoroutine(DelayForRobot(e.AllowedCells, e.CurrentPlayerColor));
         }
 
-        private void DelayRobotTurn()
+        private IEnumerator DelayForRobot(IEnumerable<Cell> allowedCells, ChipColor currentPlayerColor )
         {
-            Debug.Log("called");
-            timer = timerWait;
-            while(timer > 0)
-            {
-                Debug.Log(timer);
-                //artificial delay
-            }
+            yield return new WaitForSeconds(2f);
 
+            SwitchTurn(allowedCells, currentPlayerColor);
         }
 
         // enable collider if this cell is allowed
@@ -159,10 +162,14 @@ namespace Assets.Scripts.View
 
         private void ClearAllowedCells()
         {
+            Debug.Log("kek");
+            string result = "";
             foreach (GameObject cell in allowedCells)
             {
+                result += cell.name + ", ";
                 cell.SetActive(false);
             }
+            Debug.Log(result);
         }
 
         private void CountChanged(object sender, CountChangedEventArgs e)
@@ -193,7 +200,6 @@ namespace Assets.Scripts.View
 
         private void GameOver(object sender, GameOverEventArgs e)
         {
-            ClearAllowedCells();
 
             if (e.WinnerColor == null)
                 infoField.text = "played a draw!";
@@ -214,15 +220,19 @@ namespace Assets.Scripts.View
         }
 
 
+
         private void SubscribeOnEvents()
         {
             model.NewGameStarted += NewGameStarted;
             model.WrongMove += WrongMove;
-            model.SetChips += SetChips;
             model.GameOver += GameOver;
-            model.SwitchMove += SwitchTurn;
             model.CountChanged += CountChanged;
 
+            model.SwitchMove += SwitchMoveConsideringUserType;
+
+
+            model.SetChips += (s, eArgs) => { ClearAllowedCells(); };
+            model.SetChips += SetChips;
 
         }
 
@@ -248,17 +258,10 @@ namespace Assets.Scripts.View
 
             model = holder.reversiModel;
             SubscribeOnEvents();
-
-            timer = 100f;
-            timerIsActive = false;
         }
 
         void Update()
         {
-            CheckTimer();
-            timer -= Time.deltaTime;
-            //if (timer < -100f)
-            //    timer = 100f;
         }
     }
 }
