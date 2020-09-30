@@ -5,9 +5,16 @@ namespace ReversiCore
 {
     internal class ChangedChipsSearcher : Searcher
     {
-        internal ChangedChipsSearcher(Board currentBoard, Color currentPlayerColor)
-            : base(currentBoard, currentPlayerColor) { }
+        internal ChangedChipsSearcher(Field currentField, Color currentPlayerColor)
+            : base(currentField, currentPlayerColor) { }
 
+
+        /*
+         * Method finds all the chips which color has to be changed 
+         * after putting given chip onto the board field
+         * -----------------------------------------
+         * chip - chip that is put onto the board field
+         */
         internal List<Chip> GetAllChangedChips(Chip chip)
         {
             List<Chip> ChangedChips = new List<Chip>();
@@ -16,7 +23,7 @@ namespace ReversiCore
             {
                 for (int stepY = -1; stepY <= 1; stepY++)
                 {
-                    int maxDistance = GetDistanceToFieldEdgeForCell(chip.Cell, stepX, stepY);
+                    int maxDistance = GetDistanceToFieldEdgeFromCell(chip.Cell, stepX, stepY);
 
                     int distance = 1;
                     int currentX = chip.Cell.X;
@@ -27,14 +34,14 @@ namespace ReversiCore
                         currentX += stepX;
                         currentY += stepY;
 
-                        if (board.Field[currentX, currentY] == null)
+                        if (field.PlacedChips[currentX, currentY] == null)
                         {
                             break;
                         }
 
-                        if (board.Field[currentX, currentY] == playerColor)
+                        if (field.PlacedChips[currentX, currentY] == playerColor)
                         {
-                            ChangedChips.AddRange(GetListOfChipsInRow(chip.Cell, stepX, stepY, distance));
+                            ChangedChips.AddRange(GetListOfChipsInRow(chip.Cell, stepX, stepY, distance - 1));
                             break;
                         }
 
@@ -46,6 +53,16 @@ namespace ReversiCore
             return ChangedChips;
         }
 
+
+        /*
+         * Method returns a row of chips started from the given cell 
+         * moving by given step values for given length of the row
+         * -----------------------------------------
+         * cell - cell that starts the row (excluded)
+         * stepX - step that has to be taken along x-axis
+         * stepY - step that has to be taken along y-axis
+         * length - length of the row
+         */
         private List<Chip> GetListOfChipsInRow(Cell cell, int stepX, int stepY, int length)
         {
             int currentX = cell.X;
@@ -53,7 +70,7 @@ namespace ReversiCore
 
             List<Chip> chips = new List<Chip>();
 
-            for (int i = 0; i < length - 1; i++)
+            for (int i = 0; i < length; i++)
             {
                 currentX += stepX;
                 currentY += stepY;

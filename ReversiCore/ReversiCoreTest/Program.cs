@@ -5,8 +5,13 @@ using System;
 
 namespace ReversiCoreTest
 {
+    /*
+     * Here is some code for manual and dirty testing of the reversi core
+     */
+
     class Program
     {
+        //Simulates human to human game mode
         static void Test1()
         {
             ReversiModel model = new ReversiModel();
@@ -14,21 +19,11 @@ namespace ReversiCoreTest
             model.WrongMove += (s, ea) => 
             { 
                 Console.WriteLine("Wrong move");
-
-                foreach (Cell cell in model.currentAllowedCells)
-                {
-                    Console.WriteLine("{0} {1}", cell.X, cell.Y);
-                }
             };
             model.SwitchMove += (s, ea) => { Console.WriteLine("Switch move {0}", ea.CurrentPlayerColor); };
             model.SwitchMove += (s, ea) =>
             {
                 foreach (Cell cell in ea.AllowedCells)
-                {
-                    Console.WriteLine("{0} {1}", cell.X, cell.Y);
-                }
-                Console.WriteLine("-------------------");
-                foreach (Cell cell in model.currentAllowedCells)
                 {
                     Console.WriteLine("{0} {1}", cell.X, cell.Y);
                 }
@@ -63,9 +58,15 @@ namespace ReversiCoreTest
 
             model.NewGame(GameMode.HumanToRobot, Color.Black);
 
+            while (true)
+            {
+                int x = int.Parse(Console.ReadLine());
+                int y = int.Parse(Console.ReadLine());
+                model.PutChip(x, y);
+            }
         }
 
-        //Test robot mode (color you want)
+        //Test robot mode (playing for color you want)
         static void Test3(Color userColor)
         {
             ReversiModel model = new ReversiModel();
@@ -83,6 +84,13 @@ namespace ReversiCoreTest
             };
 
             model.NewGame(GameMode.HumanToRobot, userColor);
+
+            while (true)
+            {
+                int x = int.Parse(Console.ReadLine());
+                int y = int.Parse(Console.ReadLine());
+                model.PutChip(x, y);
+            }
         }
 
 

@@ -1,21 +1,17 @@
 ﻿using ReversiCore.Enums;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ReversiCore
 {
+    //Game board
     internal class Board
     {
-        internal int Size { get; private set; }
-        internal Color?[,] Field { get; private set; }
-
-        public List<Chip> StartChips { get; private set; }
+        internal Field BoardField { get; private set; } //Field of the board that contains chips
+        internal List<Chip> StartChips { get; private set; } //List of chips that have to be put onto board field when game is started
 
         internal Board()
         {
-            Size = 8;
-            Field = new Color?[Size, Size];
+            BoardField = new Field();
 
             StartChips = new List<Chip>()
             {
@@ -28,53 +24,89 @@ namespace ReversiCore
             Clear();
         }
 
+
+        /*
+         * Method clears board field
+         */
         private void Clear()
         {
-            for (int i = 0; i < Size; i++)
+            for (int i = 0; i < BoardField.Size; i++)
             {
-                for (int j = 0; j < Size; j++)
+                for (int j = 0; j < BoardField.Size; j++)
                 {
-                    Field[i, j] = null;
+                    BoardField.PlacedChips[i, j] = null;
                 }
             }
         }
 
+
+        /*
+         * Method sets chips on board field into start position
+         */
         internal void SetStartPosition()
         {
             Clear();
             
             foreach(Chip chip in StartChips)
             {
-                Field[chip.Cell.X, chip.Cell.Y] = chip.Color;
+                BoardField.PlacedChips[chip.Cell.X, chip.Cell.Y] = chip.Color;
             }
         }
 
+
+        /*
+         * Method returns all the cells where current player can put their chips into
+         * -----------------------------------------
+         * currentPlayerColor - color of the current player
+         */
         internal SortedSet<Cell> GetAllowedCells(Color currentPlayerColor)
         {
-            AllowedCellsSearcher allowedCellsSearcher = new AllowedCellsSearcher(this, currentPlayerColor); //Field, not this TODO
+            AllowedCellsSearcher allowedCellsSearcher = new AllowedCellsSearcher(BoardField, currentPlayerColor);
             return allowedCellsSearcher.GetAllAllowedCells(currentPlayerColor);
         }
 
+
+        /*
+         * Method adds given chip onto board field
+         * -----------------------------------------
+         * chip - chip that has to be added onto board field
+         */
         internal void AddChip(Chip chip)
         {
-            Field[chip.Cell.X, chip.Cell.Y] = chip.Color;
+            BoardField.PlacedChips[chip.Cell.X, chip.Cell.Y] = chip.Color;
         }
 
+
+        /*
+         * Method changes color of all the chips which color has to be changed
+         * after putting given chip onto the board field
+         * and returns them
+         * -----------------------------------------
+         * newChip - chip that is put onto the board field
+         * currentPlayerColor - color of the current player
+         */
         internal List<Chip> GetChangedChips(Chip newChip, Color currentPlayerColor)
         {
-            ChangedChipsSearcher changedChipsSearcher = new ChangedChipsSearcher(this, currentPlayerColor); //Field, not this TODO
+            ChangedChipsSearcher changedChipsSearcher = new ChangedChipsSearcher(BoardField, currentPlayerColor);
             List<Chip> changedChips = changedChipsSearcher.GetAllChangedChips(newChip);
             RepaintChips(changedChips, currentPlayerColor);
             return changedChips;
         }
 
+
+        /*
+         * Method repeains list of given chips into given color
+         * -----------------------------------------
+         * changedChips - list of chips that has to be repainted
+         * color - color which chips are have to be repainted into
+         */
         private void RepaintChips(List<Chip> changedChips, Color color)
         {
             for (int i = 0; i < changedChips.Count; i++)
             {
                 Chip chip = changedChips[i];
                 chip.Color = color;
-                Field[chip.Cell.X, chip.Cell.Y] = color;
+                BoardField.PlacedChips[chip.Cell.X, chip.Cell.Y] = color;
             }
         }
     }
