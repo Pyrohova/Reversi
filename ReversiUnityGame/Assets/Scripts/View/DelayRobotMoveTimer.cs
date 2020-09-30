@@ -2,6 +2,9 @@
 
 namespace Assets.Scripts.View
 {
+    /*
+     * Timer that delays robot move
+     */
     public class DelayRobotMoveTimer
     {
         private float maxTime;

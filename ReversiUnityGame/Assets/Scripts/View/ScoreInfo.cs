@@ -6,8 +6,11 @@ namespace Assets.Scripts.View
 
     public class ScoreInfo : MonoBehaviour
     {
-        [SerializeField] Text WhiteScore;
-        [SerializeField] Text BlackScore;
+        [SerializeField] 
+        Text WhiteScore;
+
+        [SerializeField] 
+        Text BlackScore;
 
         public void UpdateScore(int CountWhite, int CountBlack)
         {
@@ -21,7 +24,7 @@ namespace Assets.Scripts.View
             BlackScore.text = "0";
         }
 
-        private void Start()
+        void Start()
         {
             ClearAll();
         }

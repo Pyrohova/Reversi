@@ -1,9 +1,6 @@
 ﻿using ReversiCore;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using Assets.Scripts.Model;
-using ReversiCore.Enums;
 
 using ChipColor = ReversiCore.Enums.Color;
 
@@ -113,7 +110,7 @@ namespace Assets.Scripts.View
             }
         }
 
-        public void Start()
+        void Start()
         {
             boardCells = new GameObject[boardSize, boardSize];
             existedChips = new GameObject[boardSize, boardSize];

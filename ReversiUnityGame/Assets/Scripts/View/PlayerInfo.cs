@@ -9,8 +9,11 @@ namespace Assets.Scripts.View
 {
     public class PlayerInfo : MonoBehaviour
     {
-        [SerializeField] Text InfoField;
-        [SerializeField] Text CurrentTurn;
+        [SerializeField] 
+        Text InfoField;
+
+        [SerializeField] 
+        Text CurrentTurn;
 
         public void UpdateInfoField(string infoText)
         {
@@ -29,7 +32,7 @@ namespace Assets.Scripts.View
         }
 
 
-        private void Start()
+        void Start()
         {
             ClearAll();
         }

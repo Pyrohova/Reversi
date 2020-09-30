@@ -3,15 +3,15 @@ using ReversiCore.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace ReversiRobot
 {
+    //User that makes random moves into allowed cells
     public class RandomUser
     {
         private Random rand;
-        private ReversiModel model;
-        private Color? currentColor;
+        private ReversiModel model; //Reversi model
+        private Color? currentColor; //Current color of this player
 
         public RandomUser(ReversiModel reversiModel)
         {
@@ -29,6 +29,12 @@ namespace ReversiRobot
             model.SwitchMove += OnSwitchMove;
         }
 
+
+        /*
+         * Method that makes random move into one of allowed cells
+         * -----------------------------------------
+         * allowedCells - cells where user currently can put chip into
+         */
         internal void MakeMove(SortedSet<Cell> allowedCells)
         {
             int randAllowedCellNumber = rand.Next(allowedCells.Count);
@@ -38,6 +44,10 @@ namespace ReversiRobot
             model.PutChip(currentMoveCell.X, currentMoveCell.Y);
         }
 
+
+        /*
+         * Method that makes move if it is current user turn
+         */
         private void OnSwitchMove(object sender, SwitchMoveEventArgs eventArgs)
         {
             if (eventArgs.CurrentPlayerColor == currentColor)
@@ -46,6 +56,10 @@ namespace ReversiRobot
             }
         }
 
+
+        /*
+         * Method that disables robot player in current game
+         */
         private void Disable()
         {
             currentColor = null;

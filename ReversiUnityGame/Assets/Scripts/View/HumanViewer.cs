@@ -11,21 +11,27 @@ namespace Assets.Scripts.View
 {
     public class HumanViewer : MonoBehaviour
     {
-        [SerializeField] ReversiModelHolder holder;
+        [SerializeField] 
+        ReversiModelHolder holder;
+
         private ReversiModel model;
 
-        [SerializeField] GameBoard gameBoard;
+        [SerializeField] 
+        GameBoard gameBoard;
 
-        [SerializeField] PlayerInfo playerInfo;
-        [SerializeField] ScoreInfo scoreInfo;
+        [SerializeField] 
+        PlayerInfo playerInfo;
+
+        [SerializeField] 
+        ScoreInfo scoreInfo;
 
         private GameMode currentMode;
 
         private ChipColor playerColor;
 
-        private DelayRobotMoveTimer delayRobotMoveTimer;
-        private SwitchMoveEventArgs lastDelayedSwitchMoveEventArgs;
-        private SetChipsEventArgs lastDelayedSetChipsEventArgs;
+        private DelayRobotMoveTimer delayRobotMoveTimer = new DelayRobotMoveTimer();
+        private SwitchMoveEventArgs lastDelayedSwitchMoveEventArgs; //EventArgs of the last SwitchMove event which has been delayed
+        private SetChipsEventArgs lastDelayedSetChipsEventArgs; //EventArgs of the last SetChips event which has been delayed
 
         private float delayRobotMoveTime = 1f; // how many time player will wait for robot's answer
 
@@ -57,7 +63,13 @@ namespace Assets.Scripts.View
         //
         private void SwitchMoveConsideringUserType(object sender, SwitchMoveEventArgs e)
         {
-            //if it's pvp mode or it's not your turn or the robot is not delayed now => make turn for player
+            /*
+             * if it's HumanToHuman mode 
+             * or it's HumanToRobot mode but robot turn 
+             * or robot move is not currently delayed
+             * => do not make delay
+             * else make delay
+             */
             if (currentMode == GameMode.HumanToHuman || e.CurrentPlayerColor != playerColor || !delayRobotMoveTimer.IsRunning)
             {
                 SwitchTurn(e.AllowedCells, e.CurrentPlayerColor);
@@ -81,6 +93,8 @@ namespace Assets.Scripts.View
 
         private void NewGameStarted(object sender, NewGameEventArgs e)
         {
+            delayRobotMoveTimer.Stop();
+
             //reset result
             ClearAll();
 
@@ -109,6 +123,13 @@ namespace Assets.Scripts.View
 
         private void SetChipsConsideringUserType(object sender, SetChipsEventArgs e)
         {
+            /*
+             * if it is HumanToHuman mode 
+             * or it is Human to Robot mode but human move
+             * or current SetChips event configures start board position
+             * => do not make delay
+             * else make delay
+             */
             if (currentMode == GameMode.HumanToHuman || e.NewChip.Color == playerColor || e.ChangedChips.Count == 0)
             {
                 SetChips(e.NewChip, e.ChangedChips);
@@ -137,21 +158,11 @@ namespace Assets.Scripts.View
             model.GameOver += GameOver;
             model.SwitchMove += SwitchMoveConsideringUserType;
             model.CountChanged += CountChanged;
-
         }
 
 
         void Start()
         {
-            delayRobotMoveTimer = new DelayRobotMoveTimer();
-
-            GameBoard gameBoard = new GameBoard();
-
-            PlayerInfo playerInfo = new PlayerInfo();
-            ScoreInfo scoreInfo = new ScoreInfo();
-
-            ClearAll();
-
             model = holder.reversiModel;
             SubscribeOnEvents();
         }
@@ -168,6 +179,8 @@ namespace Assets.Scripts.View
             if (delayRobotMoveTimer.HasReachedMaxTime)
             {
                 delayRobotMoveTimer.Stop();
+
+                //call delayed methods (set chips of robot move, then switch turn to human)
                 SetChips(lastDelayedSetChipsEventArgs.NewChip, lastDelayedSetChipsEventArgs.ChangedChips);
                 SwitchTurn(lastDelayedSwitchMoveEventArgs.AllowedCells, lastDelayedSwitchMoveEventArgs.CurrentPlayerColor);
             }

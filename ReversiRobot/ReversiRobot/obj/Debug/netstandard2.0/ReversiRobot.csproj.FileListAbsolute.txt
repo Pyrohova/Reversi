@@ -9,3 +9,4 @@ C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiRobot\ReversiRobot\obj\Debu
 C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiRobot\ReversiRobot\obj\Debug\netstandard2.0\ReversiRobot.csproj.CopyComplete
 C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiRobot\ReversiRobot\obj\Debug\netstandard2.0\ReversiRobot.dll
 C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiRobot\ReversiRobot\obj\Debug\netstandard2.0\ReversiRobot.pdb
+C:\Users\lensk\Documents\GitHub\ReversiSimple\ReversiRobot\ReversiRobot\obj\Debug\netstandard2.0\ReversiRobot.csprojAssemblyReference.cache
