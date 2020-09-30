@@ -1,12 +1,9 @@
 ﻿using ReversiCore;
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts.Model;
 using ReversiCore.Enums;
-using System;
-using System.Threading;
 
 using ChipColor = ReversiCore.Enums.Color;
 
@@ -39,6 +36,10 @@ namespace Assets.Scripts.View
         private GameMode currentMode;
 
         private ChipColor playerColor;
+
+        private DelayRobotMoveTimer delayRobotMoveTimer;
+        private SwitchMoveEventArgs lastDelayedSwitchMoveEventArgs;
+        private SetChipsEventArgs lastDelayedSetChipsEventArgs;
 
 
         public void ClearAll()
@@ -104,45 +105,43 @@ namespace Assets.Scripts.View
         }
 
 
-        private void SwitchTurn(object sender, SwitchMoveEventArgs e)
+        private void SwitchTurn(IEnumerable<Cell> allowedCells, ChipColor currentPlayerColor)
         {
-            //if (e.CurrentPlayerColor == playerColor)
-            //{
-            //    Debug.Log("startswitch");
-            //    Thread.Sleep(1000);
-            //    Debug.Log("finishedswitch");
-            //}
-
             if (currentMode == GameMode.HumanToRobot)
             {
-                if (e.CurrentPlayerColor == ChipColor.Black)
+                if (currentPlayerColor == ChipColor.Black)
                     currentTurn.text = "White";
                 else
                     currentTurn.text = "Black";
             }
             else
             {
-                currentTurn.text = e.CurrentPlayerColor.ToString();
+                currentTurn.text = currentPlayerColor.ToString();
             }
 
             //actual only  if player vs  robot
             //if it's not player's turn, make delay for robot
-            if ((e.CurrentPlayerColor != playerColor) && (currentMode == GameMode.HumanToRobot))
+            if ((currentPlayerColor != playerColor) && (currentMode == GameMode.HumanToRobot))
             {
-
-                //DelayRobotTurn();
                 return;
             }
 
-            // remove previous allowed cells
-            ClearAllowedCells();
-
             // create new
-            foreach (Cell allowedCell in e.AllowedCells)
+            foreach (Cell allowedCell in allowedCells)
             {
                 AllowCell(allowedCell);
             }
+        }
 
+        private void SwitchMoveConsideringUserType(object sender, SwitchMoveEventArgs e)
+        {
+            if (currentMode == GameMode.HumanToHuman || e.CurrentPlayerColor != playerColor || !delayRobotMoveTimer.IsRunning)
+            {
+                SwitchTurn(e.AllowedCells, e.CurrentPlayerColor);
+                return;
+            }
+
+            lastDelayedSwitchMoveEventArgs = e;
         }
 
         // enable collider if this cell is allowed
@@ -196,19 +195,23 @@ namespace Assets.Scripts.View
 
         }
 
-        private void SetChips(object sender, SetChipsEventArgs e)
+        private void SetChipsConsideringUserType(object sender, SetChipsEventArgs e)
         {
-           
-            //if (e.NewChip.Color != playerColor)
-            //{
-            //    Debug.Log("start");
-            //    Thread.Sleep(1000);
-            //    Debug.Log("finished");
-            //}
+            if (currentMode == GameMode.HumanToHuman || e.NewChip.Color == playerColor || e.ChangedChips.Count == 0)
+            {
+                SetChips(e.NewChip, e.ChangedChips);
+                return;
+            }
 
-            AddChip(e.NewChip);
+            lastDelayedSetChipsEventArgs = e;
+            delayRobotMoveTimer.Start(1f);
+        }
 
-            foreach (Chip chip in e.ChangedChips)
+        private void SetChips(Chip newChip, IEnumerable<Chip> changedChips)
+        {
+            AddChip(newChip);
+
+            foreach (Chip chip in changedChips)
             {
                 RemoveChip(chip);
                 AddChip(chip);
@@ -220,17 +223,19 @@ namespace Assets.Scripts.View
         {
             model.NewGameStarted += NewGameStarted;
             model.WrongMove += WrongMove;
-            model.SetChips += SetChips;
+            model.SetChips += SetChipsConsideringUserType;
+            model.SetChips += (s, ea) => { ClearAllowedCells(); };
             model.GameOver += GameOver;
-            model.SwitchMove += SwitchTurn;
+            model.SwitchMove += SwitchMoveConsideringUserType;
             model.CountChanged += CountChanged;
-
 
         }
 
 
         void Start()
         {
+            delayRobotMoveTimer = new DelayRobotMoveTimer();
+
             boardCells = new GameObject[boardSize, boardSize];
             existedChips = new GameObject[boardSize, boardSize];
             allowedCells = new GameObject[boardSize, boardSize];
@@ -245,7 +250,19 @@ namespace Assets.Scripts.View
 
         void Update()
         {
+            if (!delayRobotMoveTimer.IsRunning)
+            {
+                return;
+            }
 
+            delayRobotMoveTimer.Increase(Time.deltaTime);
+
+            if (delayRobotMoveTimer.HasReachedMaxTime)
+            {
+                delayRobotMoveTimer.Stop();
+                SetChips(lastDelayedSetChipsEventArgs.NewChip, lastDelayedSetChipsEventArgs.ChangedChips);
+                SwitchTurn(lastDelayedSwitchMoveEventArgs.AllowedCells, lastDelayedSwitchMoveEventArgs.CurrentPlayerColor);
+            }
         }
     }
 }
