@@ -40,9 +40,6 @@ namespace Assets.Scripts.View
 
         private ChipColor playerColor;
 
-        private float timer;
-        private float timerWait = 5f;
-        private bool timerIsActive;
 
         public void ClearAll()
         {
@@ -60,18 +57,18 @@ namespace Assets.Scripts.View
 
         private void AddChip(Chip newChip)
         {
-                GameObject chipToCreate;
+            GameObject chipToCreate;
 
-                //choose color
-                if (newChip.Color == ChipColor.Black)
-                    chipToCreate = blackChip;
-                else
-                    chipToCreate = whiteChip;
+            //choose color
+            if (newChip.Color == ChipColor.Black)
+                chipToCreate = blackChip;
+            else
+                chipToCreate = whiteChip;
 
-                existedChips[newChip.Cell.X, newChip.Cell.Y] = Instantiate(chipToCreate, boardCells[newChip.Cell.X,
-                    newChip.Cell.Y].transform.position, chipToCreate.transform.rotation);
-                existedChips[newChip.Cell.X, newChip.Cell.Y].transform.SetParent(chips.transform);
-                existedChips[newChip.Cell.X, newChip.Cell.Y].name = newChip.Cell.X + "" + newChip.Cell.Y;
+            existedChips[newChip.Cell.X, newChip.Cell.Y] = Instantiate(chipToCreate, boardCells[newChip.Cell.X,
+                newChip.Cell.Y].transform.position, chipToCreate.transform.rotation);
+            existedChips[newChip.Cell.X, newChip.Cell.Y].transform.SetParent(chips.transform);
+            existedChips[newChip.Cell.X, newChip.Cell.Y].name = newChip.Cell.X + "" + newChip.Cell.Y;
 
         }
 
@@ -91,7 +88,7 @@ namespace Assets.Scripts.View
                     boardCells[i, j].name = i + "" + j;
                     boardCells[i, j].transform.SetParent(cells.transform);
 
-                    allowedCells[i,j] = Instantiate(allowedCellProto, new Vector2(startX, startY), cellProto.transform.rotation);
+                    allowedCells[i, j] = Instantiate(allowedCellProto, new Vector2(startX, startY), cellProto.transform.rotation);
                     allowedCells[i, j].name = i + "" + j;
                     allowedCells[i, j].transform.SetParent(cellColliders.transform);
                     allowedCells[i, j].SetActive(false);
@@ -107,53 +104,45 @@ namespace Assets.Scripts.View
         }
 
 
-        private void SwitchTurn(IEnumerable<Cell> allowedCells, ChipColor currentPlayerColor)
+        private void SwitchTurn(object sender, SwitchMoveEventArgs e)
         {
+            //if (e.CurrentPlayerColor == playerColor)
+            //{
+            //    Debug.Log("startswitch");
+            //    Thread.Sleep(1000);
+            //    Debug.Log("finishedswitch");
+            //}
+
             if (currentMode == GameMode.HumanToRobot)
             {
-                if (currentPlayerColor == ChipColor.Black)
+                if (e.CurrentPlayerColor == ChipColor.Black)
                     currentTurn.text = "White";
                 else
                     currentTurn.text = "Black";
-            } else
+            }
+            else
             {
-                currentTurn.text = currentPlayerColor.ToString();
+                currentTurn.text = e.CurrentPlayerColor.ToString();
             }
 
             //actual only  if player vs  robot
             //if it's not player's turn, make delay for robot
-            if ( (currentPlayerColor != playerColor) && (currentMode == GameMode.HumanToRobot) )
+            if ((e.CurrentPlayerColor != playerColor) && (currentMode == GameMode.HumanToRobot))
             {
-                System.Threading.Thread.Sleep(1000);
-                DelayForRobot(allowedCells, currentPlayerColor);
+
+                //DelayRobotTurn();
                 return;
             }
-            string result = "";
+
+            // remove previous allowed cells
+            ClearAllowedCells();
+
             // create new
-            foreach (Cell allowedCell in allowedCells)
+            foreach (Cell allowedCell in e.AllowedCells)
             {
-                result += allowedCell.X + "" + allowedCell.Y + ", ";
                 AllowCell(allowedCell);
             }
-            Debug.Log(result);
-        }
 
-        private void SwitchMoveConsideringUserType(object sender, SwitchMoveEventArgs e)
-        {
-            if ((e.CurrentPlayerColor == playerColor) || (currentMode == GameMode.HumanToHuman))
-            {
-                SwitchTurn(e.AllowedCells, e.CurrentPlayerColor);
-                return;
-            }
-
-            StartCoroutine(DelayForRobot(e.AllowedCells, e.CurrentPlayerColor));
-        }
-
-        private IEnumerator DelayForRobot(IEnumerable<Cell> allowedCells, ChipColor currentPlayerColor )
-        {
-            yield return new WaitForSeconds(0f);
-
-            SwitchTurn(allowedCells, currentPlayerColor);
         }
 
         // enable collider if this cell is allowed
@@ -164,14 +153,10 @@ namespace Assets.Scripts.View
 
         private void ClearAllowedCells()
         {
-            Debug.Log("kek");
-            string result = "";
             foreach (GameObject cell in allowedCells)
             {
-                result += cell.name + ", ";
                 cell.SetActive(false);
             }
-            Debug.Log(result);
         }
 
         private void CountChanged(object sender, CountChangedEventArgs e)
@@ -197,11 +182,12 @@ namespace Assets.Scripts.View
                 playerColor = (ChipColor)e.UserPlayerColor;
             }
             currentMode = e.NewGameMode;
-            
+
         }
 
         private void GameOver(object sender, GameOverEventArgs e)
         {
+            ClearAllowedCells();
 
             if (e.WinnerColor == null)
                 infoField.text = "played a draw!";
@@ -212,6 +198,14 @@ namespace Assets.Scripts.View
 
         private void SetChips(object sender, SetChipsEventArgs e)
         {
+           
+            //if (e.NewChip.Color != playerColor)
+            //{
+            //    Debug.Log("start");
+            //    Thread.Sleep(1000);
+            //    Debug.Log("finished");
+            //}
+
             AddChip(e.NewChip);
 
             foreach (Chip chip in e.ChangedChips)
@@ -222,31 +216,18 @@ namespace Assets.Scripts.View
         }
 
 
-
         private void SubscribeOnEvents()
         {
             model.NewGameStarted += NewGameStarted;
             model.WrongMove += WrongMove;
+            model.SetChips += SetChips;
             model.GameOver += GameOver;
+            model.SwitchMove += SwitchTurn;
             model.CountChanged += CountChanged;
 
-            model.SwitchMove += SwitchMoveConsideringUserType;
-
-
-            model.SetChips += (s, eArgs) => { ClearAllowedCells(); };
-            model.SetChips += SetChips;
 
         }
 
-        private void CheckTimer()
-        {
-            if (timerIsActive)
-            {
-                timer = timerWait;
-                if (timer < 0)
-                    timerIsActive = false;
-            }
-        }
 
         void Start()
         {
@@ -264,6 +245,7 @@ namespace Assets.Scripts.View
 
         void Update()
         {
+
         }
     }
 }
