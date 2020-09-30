@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Assets.Scripts.Model;
 using ReversiCore.Enums;
 using System;
+using System.Threading;
 
 using ChipColor = ReversiCore.Enums.Color;
 
@@ -123,6 +124,7 @@ namespace Assets.Scripts.View
             //if it's not player's turn, make delay for robot
             if ( (currentPlayerColor != playerColor) && (currentMode == GameMode.HumanToRobot) )
             {
+                System.Threading.Thread.Sleep(1000);
                 DelayForRobot(allowedCells, currentPlayerColor);
                 return;
             }
@@ -149,7 +151,7 @@ namespace Assets.Scripts.View
 
         private IEnumerator DelayForRobot(IEnumerable<Cell> allowedCells, ChipColor currentPlayerColor )
         {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(0f);
 
             SwitchTurn(allowedCells, currentPlayerColor);
         }
