@@ -3,6 +3,7 @@ using ReversiCore.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace ReversiRobot
 {
@@ -41,6 +42,7 @@ namespace ReversiRobot
         {
             if (eventArgs.CurrentPlayerColor == currentColor)
             {
+                Thread.Sleep(2000);
                 MakeMove(eventArgs.AllowedCells);
             }
         }
