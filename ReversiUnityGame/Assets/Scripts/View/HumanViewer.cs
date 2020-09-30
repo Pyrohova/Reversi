@@ -257,8 +257,8 @@ namespace Assets.Scripts.View
         {
             CheckTimer();
             timer -= Time.deltaTime;
-            if (timer < -100f)
-                timer = 100f;
+            //if (timer < -100f)
+            //    timer = 100f;
         }
     }
 }
