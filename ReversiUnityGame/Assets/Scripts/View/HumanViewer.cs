@@ -39,6 +39,10 @@ namespace Assets.Scripts.View
 
         private ChipColor playerColor;
 
+        private float timer;
+        private float timerWait = 5f;
+        private bool timerIsActive;
+
         public void ClearAll()
         {
             foreach (GameObject existed in existedChips)
@@ -57,6 +61,7 @@ namespace Assets.Scripts.View
         {
                 GameObject chipToCreate;
 
+                //choose color
                 if (newChip.Color == ChipColor.Black)
                     chipToCreate = blackChip;
                 else
@@ -114,25 +119,35 @@ namespace Assets.Scripts.View
                 currentTurn.text = e.CurrentPlayerColor.ToString();
             }
 
+            //actual only  if player vs  robot
+            //if it's not player's turn, make delay for robot
             if ( (e.CurrentPlayerColor != playerColor) && (currentMode == GameMode.HumanToRobot) )
             {
                 //DelayRobotTurn();
+                timerIsActive = true;
                 return;
             }
 
             // remove previous allowed cells
             ClearAllowedCells();
 
-
-            string result = "";
-
             // create new
             foreach (Cell allowedCell in e.AllowedCells)
             {
                 AllowCell(allowedCell);
-                result += allowedCell.X +""+ allowedCell.Y + ", ";
             }
-            Debug.Log(result);
+
+        }
+
+        private void DelayRobotTurn()
+        {
+            Debug.Log("called");
+            timer = timerWait;
+            while(timer > 0)
+            {
+                Debug.Log(timer);
+                //artificial delay
+            }
 
         }
 
@@ -178,7 +193,6 @@ namespace Assets.Scripts.View
 
         private void GameOver(object sender, GameOverEventArgs e)
         {
-            // disable cells when game is over so user can only press start new game
             ClearAllowedCells();
 
             if (e.WinnerColor == null)
@@ -212,6 +226,16 @@ namespace Assets.Scripts.View
 
         }
 
+        private void CheckTimer()
+        {
+            if (timerIsActive)
+            {
+                timer = timerWait;
+                if (timer < 0)
+                    timerIsActive = false;
+            }
+        }
+
         void Start()
         {
             boardCells = new GameObject[boardSize, boardSize];
@@ -220,16 +244,21 @@ namespace Assets.Scripts.View
 
             GenerateBoard();
 
-            //ClearAll();
+            ClearAll();
 
             model = holder.reversiModel;
             SubscribeOnEvents();
 
+            timer = 100f;
+            timerIsActive = false;
         }
 
         void Update()
         {
-
+            CheckTimer();
+            timer -= Time.deltaTime;
+            if (timer < -100f)
+                timer = 100f;
         }
     }
 }
