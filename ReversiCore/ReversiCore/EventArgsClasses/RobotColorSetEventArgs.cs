@@ -6,6 +6,6 @@ namespace ReversiCore
 {
     public class RobotColorSetEventArgs : EventArgs
     {
-        public Color RobotColor { get; set; }
+        public Color RobotColor { get; set; } //Current color of the robot player
     }
 }

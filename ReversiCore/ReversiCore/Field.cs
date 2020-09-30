@@ -2,10 +2,11 @@
 
 namespace ReversiCore
 {
+    //Field of the game board
     internal class Field
     {
-        internal int Size { get; private set; }
-        internal Color?[,] PlacedChips { get; private set; }
+        internal int Size { get; private set; } //Size of the field (Size == width == height)
+        internal Color?[,] PlacedChips { get; private set; } //Colors of the chips that has been placed onto field
 
         internal Field()
         {
