@@ -1,37 +1,34 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Model;
 using ReversiCore;
 using ReversiCore.Enums;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+
+using ChipColor = ReversiCore.Enums.Color;
 
 public class HumanController : MonoBehaviour
 {
     [SerializeField] ReversiModelHolder holder;
     private ReversiModel model;
 
-    private ReversiCore.Enums.Color playerColor;
-
-
-    public void PutChip(string cellName)
+    //convert coordinates and put chip
+    private void PutChip(string cellName)
     {
         int x = Int32.Parse(cellName[0].ToString());
         int y = Int32.Parse(cellName[1].ToString());
 
         model.PutChip(x, y);
-
     }
+
     public void NewGameWithRobotAsWhite()
     {
-        model.NewGame(GameMode.HumanToRobot, ReversiCore.Enums.Color.White);
+        model.NewGame(GameMode.HumanToRobot, ChipColor.White);
     }
 
     public void NewGameWithRobotAsBlack()
     {
-        model.NewGame(GameMode.HumanToRobot, ReversiCore.Enums.Color.Black);
+        model.NewGame(GameMode.HumanToRobot, ChipColor.Black);
     }
 
     public void NewGameWithSecondPlayer()
@@ -41,19 +38,12 @@ public class HumanController : MonoBehaviour
 
     public void OnClicked()
     {
-        Debug.Log("called");
+        //get clicked button by name
         PutChip(EventSystem.current.currentSelectedGameObject.name);
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         model = holder.reversiModel;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

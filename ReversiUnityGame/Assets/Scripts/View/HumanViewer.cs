@@ -14,24 +14,10 @@ namespace Assets.Scripts.View
         [SerializeField] ReversiModelHolder holder;
         private ReversiModel model;
 
-        private const int boardSize = 8;
+        [SerializeField] GameBoard gameBoard;
 
-        [SerializeField] GameObject cellProto;
-        [SerializeField] GameObject allowedCellProto;
-        [SerializeField] GameObject blackChip;
-        [SerializeField] GameObject whiteChip;
-        [SerializeField] GameObject cells;
-        [SerializeField] GameObject chips;
-        [SerializeField] GameObject cellColliders;
-
-        [SerializeField] Text whiteScore;
-        [SerializeField] Text blackScore;
-        [SerializeField] Text infoField;
-        [SerializeField] Text currentTurn;
-
-        private GameObject[,] boardCells;
-        private GameObject[,] existedChips;
-        private GameObject[,] allowedCells;
+        [SerializeField] PlayerInfo playerInfo;
+        [SerializeField] ScoreInfo scoreInfo;
 
         private GameMode currentMode;
 
@@ -41,100 +27,37 @@ namespace Assets.Scripts.View
         private SwitchMoveEventArgs lastDelayedSwitchMoveEventArgs;
         private SetChipsEventArgs lastDelayedSetChipsEventArgs;
 
+        private float delayRobotMoveTime = 1f; // how many time player will wait for robot's answer
 
         public void ClearAll()
         {
-            foreach (GameObject existed in existedChips)
-            {
-                Destroy(existed);
-            }
-            ClearAllowedCells();
+            gameBoard.ClearAll();
 
-            whiteScore.text = "0";
-            blackScore.text = "0";
-            infoField.text = "";
-            currentTurn.text = "";
-        }
-
-        private void AddChip(Chip newChip)
-        {
-            GameObject chipToCreate;
-
-            //choose color
-            if (newChip.Color == ChipColor.Black)
-                chipToCreate = blackChip;
-            else
-                chipToCreate = whiteChip;
-
-            existedChips[newChip.Cell.X, newChip.Cell.Y] = Instantiate(chipToCreate, boardCells[newChip.Cell.X,
-                newChip.Cell.Y].transform.position, chipToCreate.transform.rotation);
-            existedChips[newChip.Cell.X, newChip.Cell.Y].transform.SetParent(chips.transform);
-            existedChips[newChip.Cell.X, newChip.Cell.Y].name = newChip.Cell.X + "" + newChip.Cell.Y;
-
-        }
-
-        private void RemoveChip(Chip chip)
-        {
-            Destroy(existedChips[chip.Cell.X, chip.Cell.Y]);
-        }
-
-        private void GenerateBoard()
-        {
-            float startX = -473, startY = 530, step = 135;
-            for (int i = 0; i < boardSize; i++)
-            {
-                for (int j = 0; j < boardSize; j++)
-                {
-                    boardCells[i, j] = Instantiate(cellProto, new Vector2(startX, startY), cellProto.transform.rotation);
-                    boardCells[i, j].name = i + "" + j;
-                    boardCells[i, j].transform.SetParent(cells.transform);
-
-                    allowedCells[i, j] = Instantiate(allowedCellProto, new Vector2(startX, startY), cellProto.transform.rotation);
-                    allowedCells[i, j].name = i + "" + j;
-                    allowedCells[i, j].transform.SetParent(cellColliders.transform);
-                    allowedCells[i, j].SetActive(false);
-
-                    startX += step;
-
-                    if (j == boardSize - 1)
-                        startX = -473;
-                }
-
-                startY -= step;
-            }
+            playerInfo.ClearAll();
+            scoreInfo.ClearAll();
         }
 
 
         private void SwitchTurn(IEnumerable<Cell> allowedCells, ChipColor currentPlayerColor)
         {
-            if (currentMode == GameMode.HumanToRobot)
-            {
-                if (currentPlayerColor == ChipColor.Black)
-                    currentTurn.text = "White";
-                else
-                    currentTurn.text = "Black";
-            }
-            else
-            {
-                currentTurn.text = currentPlayerColor.ToString();
-            }
+            // display info whose is current turn
+            playerInfo.UpdateCurrentTurnColor(currentPlayerColor);
 
-            //actual only  if player vs  robot
-            //if it's not player's turn, make delay for robot
+            //if it's not your turn and it's human vs robot mode => so robot should put chip now
             if ((currentPlayerColor != playerColor) && (currentMode == GameMode.HumanToRobot))
             {
+                //skip next step, player should not see allowed cells for robot 
                 return;
             }
 
-            // create new
-            foreach (Cell allowedCell in allowedCells)
-            {
-                AllowCell(allowedCell);
-            }
+            // make enable new colliders for player
+            gameBoard.AllowCells(allowedCells);
         }
 
+        //
         private void SwitchMoveConsideringUserType(object sender, SwitchMoveEventArgs e)
         {
+            //if it's pvp mode or it's not your turn or the robot is not delayed now => make turn for player
             if (currentMode == GameMode.HumanToHuman || e.CurrentPlayerColor != playerColor || !delayRobotMoveTimer.IsRunning)
             {
                 SwitchTurn(e.AllowedCells, e.CurrentPlayerColor);
@@ -144,55 +67,44 @@ namespace Assets.Scripts.View
             lastDelayedSwitchMoveEventArgs = e;
         }
 
-        // enable collider if this cell is allowed
-        private void AllowCell(Cell cell)
-        {
-            allowedCells[cell.X, cell.Y].SetActive(true);
-        }
-
-        private void ClearAllowedCells()
-        {
-            foreach (GameObject cell in allowedCells)
-            {
-                cell.SetActive(false);
-            }
-        }
 
         private void CountChanged(object sender, CountChangedEventArgs e)
         {
-            whiteScore.text = e.CountWhite.ToString();
-            blackScore.text = e.CountBlack.ToString();
+            //update score
+            scoreInfo.UpdateScore(e.CountWhite, e.CountBlack);
         }
 
         private void WrongMove(object sender, WrongMoveEventArgs e)
         {
-            infoField.text = "wrong move";
-            Debug.Log("wrong move on " + e.WrongChip.Cell.X + "" + e.WrongChip.Cell.Y);
+            playerInfo.UpdateInfoField("wrong move");
         }
 
         private void NewGameStarted(object sender, NewGameEventArgs e)
         {
+            //reset result
             ClearAll();
+
+            //display info that new game started
             if (e.NewGameMode == GameMode.HumanToHuman)
-                infoField.text = "new game with second player started";
+                playerInfo.UpdateInfoField("new game with second player started");
             else
             {
-                infoField.text = "new game with robot started";
+                playerInfo.UpdateInfoField("new game with robot started");
                 playerColor = (ChipColor)e.UserPlayerColor;
             }
+            //set new current mode
             currentMode = e.NewGameMode;
 
         }
 
         private void GameOver(object sender, GameOverEventArgs e)
         {
-            ClearAllowedCells();
+            // display info who is a winner
 
             if (e.WinnerColor == null)
-                infoField.text = "played a draw!";
+                playerInfo.UpdateInfoField("played a draw!");
             else
-                infoField.text = e.WinnerColor.ToString() + " won!";
-
+                playerInfo.UpdateInfoField(e.WinnerColor + " won!");
         }
 
         private void SetChipsConsideringUserType(object sender, SetChipsEventArgs e)
@@ -204,18 +116,15 @@ namespace Assets.Scripts.View
             }
 
             lastDelayedSetChipsEventArgs = e;
-            delayRobotMoveTimer.Start(1f);
+            delayRobotMoveTimer.Start(delayRobotMoveTime);
         }
 
         private void SetChips(Chip newChip, IEnumerable<Chip> changedChips)
         {
-            AddChip(newChip);
+            // add new chip on the board and replace changed
 
-            foreach (Chip chip in changedChips)
-            {
-                RemoveChip(chip);
-                AddChip(chip);
-            }
+            gameBoard.AddChip(newChip);
+            gameBoard.ReplaceChipsColor(changedChips);
         }
 
 
@@ -224,7 +133,7 @@ namespace Assets.Scripts.View
             model.NewGameStarted += NewGameStarted;
             model.WrongMove += WrongMove;
             model.SetChips += SetChipsConsideringUserType;
-            model.SetChips += (s, ea) => { ClearAllowedCells(); };
+            model.SetChips += (s, ea) => { gameBoard.ClearAllowedCells(); };
             model.GameOver += GameOver;
             model.SwitchMove += SwitchMoveConsideringUserType;
             model.CountChanged += CountChanged;
@@ -236,11 +145,10 @@ namespace Assets.Scripts.View
         {
             delayRobotMoveTimer = new DelayRobotMoveTimer();
 
-            boardCells = new GameObject[boardSize, boardSize];
-            existedChips = new GameObject[boardSize, boardSize];
-            allowedCells = new GameObject[boardSize, boardSize];
+            GameBoard gameBoard = new GameBoard();
 
-            GenerateBoard();
+            PlayerInfo playerInfo = new PlayerInfo();
+            ScoreInfo scoreInfo = new ScoreInfo();
 
             ClearAll();
 
