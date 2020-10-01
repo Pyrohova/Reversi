@@ -52,31 +52,31 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11206}
+      Script: {instanceID: 11148}
     - Class: 114
-      Script: {instanceID: 11242}
+      Script: {instanceID: 11174}
     - Class: 114
-      Script: {instanceID: 11412}
+      Script: {instanceID: 11210}
     - Class: 114
-      Script: {instanceID: 11502}
+      Script: {instanceID: 11380}
     - Class: 114
-      Script: {instanceID: 11556}
+      Script: {instanceID: 11470}
     - Class: 114
-      Script: {instanceID: 12218}
+      Script: {instanceID: 11524}
     - Class: 114
-      Script: {instanceID: 12648}
+      Script: {instanceID: 12186}
     - Class: 114
-      Script: {instanceID: 12918}
+      Script: {instanceID: 12616}
     - Class: 114
-      Script: {instanceID: 13468}
+      Script: {instanceID: 13436}
     - Class: 114
-      Script: {instanceID: 13678}
+      Script: {instanceID: 13648}
     - Class: 114
-      Script: {instanceID: 13980}
+      Script: {instanceID: 13950}
     - Class: 114
-      Script: {instanceID: 14076}
+      Script: {instanceID: 14046}
     - Class: 114
-      Script: {instanceID: 14292}
+      Script: {instanceID: 14262}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -96,6 +96,12 @@ ScriptsOnlyBuild:
     - Class: 224
       Script: {instanceID: 0}
   scriptHashData:
+  - hash:
+      serializedVersion: 2
+      Hash: 5f1752ed2092162f016c19510c28a8b9
+    assemblyName: UnityEngine.UI.dll
+    namespaceName: UnityEngine.UI
+    className: Button
   - hash:
       serializedVersion: 2
       Hash: 4bc4346a71a8df53a6b106f68ef3a190
@@ -392,12 +398,6 @@ ScriptsOnlyBuild:
     className: TextContainer
   - hash:
       serializedVersion: 2
-      Hash: 5f1752ed2092162f016c19510c28a8b9
-    assemblyName: UnityEngine.UI.dll
-    namespaceName: UnityEngine.UI
-    className: Button
-  - hash:
-      serializedVersion: 2
       Hash: f84d945e5e1ca985698660fc26e9657f
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
@@ -621,4 +621,4 @@ ScriptsOnlyBuild:
   platform: 5
   scenePathNames:
   - Assets/ReversiScene.unity
-  playerPath: C:/Users/lensk/Documents/ReversiBuild/Reversi.exe
+  playerPath: C:/Users/lensk/Documents/GitHub/ReversiSimple/ReversiBuild/Reversi.exe

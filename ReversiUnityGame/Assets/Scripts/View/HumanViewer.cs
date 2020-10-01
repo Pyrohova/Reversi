@@ -30,8 +30,6 @@ namespace Assets.Scripts.View
         private ChipColor playerColor;
 
         private DelayRobotMoveTimer delayRobotMoveTimer = new DelayRobotMoveTimer();
-        private SwitchMoveEventArgs lastDelayedSwitchMoveEventArgs; //EventArgs of the last SwitchMove event which has been delayed
-        private SetChipsEventArgs lastDelayedSetChipsEventArgs; //EventArgs of the last SetChips event which has been delayed
 
         private float delayRobotMoveTime = 1f; // how many time player will wait for robot's answer
 
@@ -76,7 +74,7 @@ namespace Assets.Scripts.View
                 return;
             }
 
-            lastDelayedSwitchMoveEventArgs = e;
+            delayRobotMoveTimer.Delay(() => { SwitchTurn(e.AllowedCells, e.CurrentPlayerColor); });
         }
 
 
@@ -135,9 +133,8 @@ namespace Assets.Scripts.View
                 SetChips(e.NewChip, e.ChangedChips);
                 return;
             }
-
-            lastDelayedSetChipsEventArgs = e;
-            delayRobotMoveTimer.Start(delayRobotMoveTime);
+            delayRobotMoveTimer.Restart(delayRobotMoveTime);
+            delayRobotMoveTimer.Delay(() => {SetChips(e.NewChip, e.ChangedChips); });
         }
 
         private void SetChips(Chip newChip, IEnumerable<Chip> changedChips)
@@ -179,10 +176,7 @@ namespace Assets.Scripts.View
             if (delayRobotMoveTimer.HasReachedMaxTime)
             {
                 delayRobotMoveTimer.Stop();
-
-                //call delayed methods (set chips of robot move, then switch turn to human)
-                SetChips(lastDelayedSetChipsEventArgs.NewChip, lastDelayedSetChipsEventArgs.ChangedChips);
-                SwitchTurn(lastDelayedSwitchMoveEventArgs.AllowedCells, lastDelayedSwitchMoveEventArgs.CurrentPlayerColor);
+                delayRobotMoveTimer.CallDelayedDelegates();
             }
         }
     }
