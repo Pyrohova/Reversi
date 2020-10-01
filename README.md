@@ -14,4 +14,5 @@
 <li> Пользователь может совершать ход только по разрешенным клеткам (подсвечены желтым).</li>
 <li> Если во время игры переключиться на другой мод, результат игры будет сброшен, то есть переключиться = начать новую игру.</li>
   </ul>
+<img src="https://github.com/Pyrohova/Reversi/blob/master/Screenshots/2020-10-01%2015.22.29.jpg">
 <img src="https://github.com/Pyrohova/Reversi/blob/master/Screenshots/2020-10-01%2015.22.44.jpg">
