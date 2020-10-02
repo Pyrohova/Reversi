@@ -148,22 +148,27 @@ namespace Assets.Scripts.View
             obj.transform.localScale = currentChipLocalSize;
         }
 
-        void Start()
+        private void ScaleBoard()
         {
-            boardCells = new GameObject[boardSize, boardSize];
-            existedChips = new GameObject[boardSize, boardSize];
-            allowedCells = new Button[boardSize, boardSize];
-
-            float defaultBoardSize = cellProto.transform.localScale.x * boardSize;
-            float newBoardSize = Screen.width;
+            float defaultBoardSize = 1080f / 1920f;
+            float newBoardSize = (float)Screen.width / (float)Screen.height;
 
             if (newBoardSize < defaultBoardSize)
             {
                 float boardScale = newBoardSize / defaultBoardSize;
                 ScaleObject(gameBoard, boardScale);
             }
+        }
+
+        void Start()
+        {
+            boardCells = new GameObject[boardSize, boardSize];
+            existedChips = new GameObject[boardSize, boardSize];
+            allowedCells = new Button[boardSize, boardSize];
 
             GenerateBoard();
+
+            ScaleBoard();
         }
 
     }
