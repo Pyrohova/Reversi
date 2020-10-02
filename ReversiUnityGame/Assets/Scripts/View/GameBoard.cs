@@ -14,28 +14,28 @@ namespace Assets.Scripts.View
         [SerializeField]
         GameObject gameBoard; //game board object on the scene
 
-        [SerializeField] 
+        [SerializeField]
         GameObject cellProto; //prototype of board cell
 
         [SerializeField]
         HumanController controller; //human controller
 
-        [SerializeField] 
+        [SerializeField]
         Button allowedCellProto; //prototype of board cell collider(collider for allowed cells)
 
-        [SerializeField] 
+        [SerializeField]
         GameObject blackChip; //prototype of black chip
 
-        [SerializeField] 
+        [SerializeField]
         GameObject whiteChip; // prototype of white chip
 
-        [SerializeField] 
+        [SerializeField]
         GameObject cells;  //parent of all cells that would be generated
 
-        [SerializeField] 
+        [SerializeField]
         GameObject chips;  // parent of all chips that would be added
 
-        [SerializeField] 
+        [SerializeField]
         GameObject cellColliders; //parent of all board cell colliders (colliders for allowed cells)
 
         private GameObject[,] boardCells;
@@ -140,11 +140,28 @@ namespace Assets.Scripts.View
             }
         }
 
+        private void ScaleObject(GameObject obj, float scale)
+        {
+            Vector3 currentChipLocalSize = obj.transform.localScale;
+            currentChipLocalSize.x *= scale;
+            currentChipLocalSize.y *= scale;
+            obj.transform.localScale = currentChipLocalSize;
+        }
+
         void Start()
         {
             boardCells = new GameObject[boardSize, boardSize];
             existedChips = new GameObject[boardSize, boardSize];
             allowedCells = new Button[boardSize, boardSize];
+
+            float defaultBoardSize = cellProto.transform.localScale.x * boardSize;
+            float newBoardSize = Screen.width;
+
+            if (newBoardSize < defaultBoardSize)
+            {
+                float boardScale = newBoardSize / defaultBoardSize;
+                ScaleObject(gameBoard, boardScale);
+            }
 
             GenerateBoard();
         }

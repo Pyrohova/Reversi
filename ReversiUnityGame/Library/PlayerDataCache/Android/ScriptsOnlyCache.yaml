@@ -21,6 +21,9 @@ ScriptsOnlyBuild:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
     - UnityEditor.TestTools.TestRunner.TestRun.TestJobDataHolder
+    UnityEditor.UI.dll:
+    - UnityEditor.UI.ButtonEditor
+    - UnityEditor.UI.ImageEditor
     UnityEngine.UI.dll:
     - UnityEngine.EventSystems.EventSystem
     - UnityEngine.EventSystems.StandaloneInputModule
@@ -52,31 +55,31 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11148}
+      Script: {instanceID: 11174}
     - Class: 114
-      Script: {instanceID: 11170}
+      Script: {instanceID: 11210}
     - Class: 114
-      Script: {instanceID: 11206}
+      Script: {instanceID: 11380}
     - Class: 114
-      Script: {instanceID: 11376}
+      Script: {instanceID: 11470}
     - Class: 114
-      Script: {instanceID: 11466}
+      Script: {instanceID: 11524}
     - Class: 114
-      Script: {instanceID: 11520}
+      Script: {instanceID: 12186}
     - Class: 114
-      Script: {instanceID: 12182}
+      Script: {instanceID: 12616}
     - Class: 114
-      Script: {instanceID: 12612}
+      Script: {instanceID: 12886}
     - Class: 114
-      Script: {instanceID: 13434}
+      Script: {instanceID: 13440}
     - Class: 114
-      Script: {instanceID: 13646}
+      Script: {instanceID: 13652}
     - Class: 114
-      Script: {instanceID: 13948}
+      Script: {instanceID: 13954}
     - Class: 114
-      Script: {instanceID: 14044}
+      Script: {instanceID: 14050}
     - Class: 114
-      Script: {instanceID: 14260}
+      Script: {instanceID: 14266}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -96,12 +99,6 @@ ScriptsOnlyBuild:
     - Class: 224
       Script: {instanceID: 0}
   scriptHashData:
-  - hash:
-      serializedVersion: 2
-      Hash: 5f1752ed2092162f016c19510c28a8b9
-    assemblyName: UnityEngine.UI.dll
-    namespaceName: UnityEngine.UI
-    className: Button
   - hash:
       serializedVersion: 2
       Hash: 4bc4346a71a8df53a6b106f68ef3a190
@@ -396,6 +393,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TextContainer
+  - hash:
+      serializedVersion: 2
+      Hash: 5f1752ed2092162f016c19510c28a8b9
+    assemblyName: UnityEngine.UI.dll
+    namespaceName: UnityEngine.UI
+    className: Button
   - hash:
       serializedVersion: 2
       Hash: f84d945e5e1ca985698660fc26e9657f
