@@ -12,10 +12,6 @@ namespace Assets.Scripts.View
         private float maxTime;
         private float elapsedTime;
 
-        public delegate void DelayableDelegate();
-
-        public DelayableDelegate delayedDelegates;
-
         public bool IsRunning { get; private set; } //if timer is currently running
         public bool HasReachedMaxTime { get; private set; } //if timer has reached its maximum time
 
@@ -25,7 +21,6 @@ namespace Assets.Scripts.View
             elapsedTime = 0;
             HasReachedMaxTime = false;
             IsRunning = false;
-            delayedDelegates = null;
         }
 
         public void Restart(float seconds)
@@ -34,7 +29,6 @@ namespace Assets.Scripts.View
             elapsedTime = 0;
             HasReachedMaxTime = false;
             IsRunning = true;
-            delayedDelegates = null;
         }
 
         public void Increase(float deltaTime)
@@ -50,26 +44,6 @@ namespace Assets.Scripts.View
         public void Stop()
         {
             IsRunning = false;
-        }
-
-
-        /*
-         * Method adds new delegate do delay
-         * ------------------------------
-         * newDelayedDelegate - delegate that has to be delayed
-         */
-        public void Delay(DelayableDelegate newDelayedDelegate)
-        {
-            delayedDelegates += newDelayedDelegate;
-        }
-
-
-        /*
-         * Method calls all delayed delegates
-         */
-        public void CallDelayedDelegates()
-        {
-            delayedDelegates?.Invoke();
         }
     }
 }

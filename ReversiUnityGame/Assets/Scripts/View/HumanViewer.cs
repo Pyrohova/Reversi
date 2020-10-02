@@ -30,6 +30,7 @@ namespace Assets.Scripts.View
         private ChipColor playerColor;
 
         private DelayRobotMoveTimer delayRobotMoveTimer = new DelayRobotMoveTimer();
+        private DelayRobotMoveQueue delayRobotMoveQueue = new DelayRobotMoveQueue();
 
         private float delayRobotMoveTime = 1f; // how many time player will wait for robot's answer
 
@@ -74,7 +75,7 @@ namespace Assets.Scripts.View
                 return;
             }
 
-            delayRobotMoveTimer.Delay(() => { SwitchTurn(e.AllowedCells, e.CurrentPlayerColor); });
+            delayRobotMoveQueue.AddDelegate(() => { SwitchTurn(e.AllowedCells, e.CurrentPlayerColor); });
         }
 
 
@@ -133,8 +134,10 @@ namespace Assets.Scripts.View
                 SetChips(e.NewChip, e.ChangedChips);
                 return;
             }
+
             delayRobotMoveTimer.Restart(delayRobotMoveTime);
-            delayRobotMoveTimer.Delay(() => {SetChips(e.NewChip, e.ChangedChips); });
+            delayRobotMoveQueue.Clear();
+            delayRobotMoveQueue.AddDelegate(() => {SetChips(e.NewChip, e.ChangedChips); });
         }
 
         private void SetChips(Chip newChip, IEnumerable<Chip> changedChips)
@@ -176,7 +179,8 @@ namespace Assets.Scripts.View
             if (delayRobotMoveTimer.HasReachedMaxTime)
             {
                 delayRobotMoveTimer.Stop();
-                delayRobotMoveTimer.CallDelayedDelegates();
+                delayRobotMoveQueue.CallDelayedDelegates();
+                delayRobotMoveQueue.Clear();
             }
         }
     }
