@@ -63,6 +63,6 @@
 # Crashlytics generated file
 *crashlytics-build.properties
 
-*/[Oo]bj/
-*/[B]in/
+*[Oo]bj
+*[B]in
 *.vs/*/DesignTimeBuild
