@@ -13,14 +13,12 @@ namespace ReversiCore
         private CountHolder countHolder; //Responsible for current score of both players (Black and White)
         private SortedSet<Cell> currentAllowedCells; //Set of cells where current player can put their chip
 
-        public event EventHandler<NewGameEventArgs> NewGameStarted; //Invokes when new game has been started
+        public event EventHandler NewGameStarted; //Invokes when new game has been started
         public event EventHandler<SetChipsEventArgs> SetChips; //Invokes when chips layout has been changed
         public event EventHandler<SwitchMoveEventArgs> SwitchMove; //Invokes when turn has been switched
         public event EventHandler<WrongMoveEventArgs> WrongMove; //Invokes when wrong move has been made by one of the users
         public event EventHandler<CountChangedEventArgs> CountChanged; //Invokes when players score has been changed
         public event EventHandler<GameOverEventArgs> GameOver; //Invokes when game has been finished
-        public event EventHandler<RobotColorSetEventArgs> RobotColorSet; //Invokes to call robot player to play for a certain color
-        public event EventHandler RobotDisabled; //Invokes when robot player has been disabled
         
         public ReversiModel()
         {
@@ -33,42 +31,18 @@ namespace ReversiCore
 
         /*
          * Method for controller to start new game 
-         * -----------------------------------------
-         * newGameMode - mode of the new game (HumanToHuman or HumanToRobot)
-         * userPlayerColor - color of the human player (not used in HumanToHuman mode)
          */
-        public void NewGame(GameMode newGameMode, Color? userPlayerColor = null)
+        public void NewGame()
         {
             turnHolder.Reset();
-
-            if (newGameMode == GameMode.HumanToRobot)
-            {
-                if (userPlayerColor == null)
-                {
-                    userPlayerColor = turnHolder.FirstTurnColor;
-                }
-
-                SetRobotColor(userPlayerColor);
-            }
-            else
-            {
-                RobotDisabled?.Invoke(this, new EventArgs());
-            }
             
-            NewGameStarted?.Invoke(
-                this, 
-                new NewGameEventArgs
-                    { 
-                        NewGameMode = newGameMode, 
-                        UserPlayerColor = userPlayerColor 
-                    }
-                );
+            NewGameStarted?.Invoke(this, new EventArgs());
 
             SetStartBoardPosition();
 
             countHolder.Reset();
 
-            SwitchMovePrepareAndInvoke();
+            FinishTurnAndMoveOn();
         }
 
 
@@ -97,15 +71,17 @@ namespace ReversiCore
 
             turnHolder.Switch();
 
-            SwitchMovePrepareAndInvoke();
+            FinishTurnAndMoveOn();
         }
 
 
         /*
          * Metod prepares model and players for the next move 
-         * and notifies players that move has been switched
+         * and notifies players that move has been switched.
+         * If next move is impossible, method notifies players 
+         * about the end of the game.
          */
-        private void SwitchMovePrepareAndInvoke()
+        private void FinishTurnAndMoveOn()
         {
             CountChanged?.Invoke(this, new CountChangedEventArgs
             {
@@ -113,10 +89,11 @@ namespace ReversiCore
                 CountBlack = countHolder.GetPlayerCount(Color.Black),
             });
 
-            CalculateAllowedCells();
+            currentAllowedCells = board.GetAllowedCells(turnHolder.CurrentTurnColor);
 
             if (currentAllowedCells.Count == 0)
             {
+                EndGame();
                 return;
             }
 
@@ -146,22 +123,6 @@ namespace ReversiCore
 
 
         /*
-         * Method notifies robot player about its color (used for HumanToRobot game mode)
-         */
-        private void SetRobotColor(Color? userPlayerColor)
-        {
-            Color robotColor = Color.White;
-
-            if (userPlayerColor == Color.White)
-            {
-                robotColor = Color.Black;
-            }
-
-            RobotColorSet?.Invoke(this, new RobotColorSetEventArgs { RobotColor = robotColor });
-        }
-
-
-        /*
          * Method checks if chip that tries to be put on the board field is allowed to do so
          * -----------------------------------------
          * chip - chip that tries to be put
@@ -175,21 +136,6 @@ namespace ReversiCore
             }
 
             return true;
-        }
-
-
-        /*
-         * Method finds all the cells where chips are allowed 
-         * to be put into during the current turn
-         */
-        private void CalculateAllowedCells()
-        {
-            currentAllowedCells = board.GetAllowedCells(turnHolder.CurrentTurnColor);
-
-            if (currentAllowedCells.Count == 0)
-            {
-                EndGame();
-            }
         }
 
 

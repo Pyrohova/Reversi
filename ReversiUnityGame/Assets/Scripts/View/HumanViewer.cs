@@ -6,13 +6,17 @@ using Assets.Scripts.Model;
 using ReversiCore.Enums;
 
 using ChipColor = ReversiCore.Enums.Color;
+using System;
 
 namespace Assets.Scripts.View
 {
     public class HumanViewer : MonoBehaviour
     {
         [SerializeField] 
-        ReversiModelHolder holder;
+        private ReversiModelHolder holder;
+
+        [SerializeField]
+        private HumanController controller;
 
         private ReversiModel model;
 
@@ -59,7 +63,7 @@ namespace Assets.Scripts.View
             gameBoard.AllowCells(allowedCells);
         }
 
-        //
+
         private void SwitchMoveConsideringUserType(object sender, SwitchMoveEventArgs e)
         {
             /*
@@ -90,24 +94,26 @@ namespace Assets.Scripts.View
             playerInfo.UpdateInfoField("wrong move");
         }
 
-        private void NewGameStarted(object sender, NewGameEventArgs e)
+        private void NewGameStarted(object sender, EventArgs e)
         {
             delayRobotMoveTimer.Stop();
 
             //reset result
             ClearAll();
+        }
 
+        private void SetGameMode(GameMode gameMode)
+        {
             //display info that new game started
-            if (e.NewGameMode == GameMode.HumanToHuman)
+            if (gameMode == GameMode.HumanToHuman)
                 playerInfo.UpdateInfoField("new game with second player started");
             else
             {
                 playerInfo.UpdateInfoField("new game with robot started");
-                playerColor = (ChipColor)e.UserPlayerColor;
             }
-            //set new current mode
-            currentMode = e.NewGameMode;
 
+            //set new current mode
+            currentMode = gameMode;
         }
 
         private void GameOver(object sender, GameOverEventArgs e)
@@ -151,6 +157,8 @@ namespace Assets.Scripts.View
 
         private void SubscribeOnEvents()
         {
+            controller.OnNewGameStarted += SetGameMode;
+
             model.NewGameStarted += NewGameStarted;
             model.WrongMove += WrongMove;
             model.SetChips += SetChipsConsideringUserType;

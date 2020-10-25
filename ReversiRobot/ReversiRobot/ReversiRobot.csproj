@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ReversiCore\ReversiCore\ReversiCore.csproj" />
+    <Reference Include="ReversiCore">
+      <HintPath>..\..\ReversiCore\ReversiCore\bin\Debug\netstandard2.0\ReversiCore.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

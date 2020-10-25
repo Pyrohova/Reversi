@@ -7,9 +7,9 @@ namespace Assets.Scripts.Model
     public class ReversiModelHolder : MonoBehaviour
     {
         public ReversiModel reversiModel { get; private set; }
-        private RandomUser robotPlayer;
+        public RandomUser robotPlayer { get; private set; }
 
-        void OnEnable()
+        void Awake()
         {
             reversiModel = new ReversiModel();
             robotPlayer = new RandomUser(reversiModel);

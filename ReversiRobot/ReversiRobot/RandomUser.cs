@@ -17,16 +17,32 @@ namespace ReversiRobot
         {
             rand = new Random();
 
-            Disable();
+            currentColor = null;
 
             model = reversiModel;
-
-            model.RobotColorSet +=
-                (sender, eventArgs) => { currentColor = eventArgs.RobotColor; };
-
-            model.RobotDisabled += (s, eventArgs) => { Disable(); };
-
             model.SwitchMove += OnSwitchMove;
+        }
+
+
+        /*
+         * Method that enables robot player for the current game (playing for given color)
+         * -----------------------------------------
+         * newCOlor - color of robot for the current game
+         */
+        public void Enable(Color newColor)
+        {
+            currentColor = newColor;
+            //model.SwitchMove += OnSwitchMove;
+        }
+
+
+        /*
+         * Method that disables robot player in current game
+         */
+        public void Disable()
+        {
+            currentColor = null;
+            //model.SwitchMove -= OnSwitchMove;
         }
 
 
@@ -35,7 +51,7 @@ namespace ReversiRobot
          * -----------------------------------------
          * allowedCells - cells where user currently can put chip into
          */
-        internal void MakeMove(SortedSet<Cell> allowedCells)
+        private void MakeMove(SortedSet<Cell> allowedCells)
         {
             int randAllowedCellNumber = rand.Next(allowedCells.Count);
 
@@ -54,15 +70,6 @@ namespace ReversiRobot
             {
                 MakeMove(eventArgs.AllowedCells);
             }
-        }
-
-
-        /*
-         * Method that disables robot player in current game
-         */
-        private void Disable()
-        {
-            currentColor = null;
         }
     }
 }

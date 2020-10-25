@@ -2,15 +2,22 @@
 using UnityEngine;
 using Assets.Scripts.Model;
 using ReversiCore;
-using ReversiCore.Enums;
 using UnityEngine.EventSystems;
 
 using ChipColor = ReversiCore.Enums.Color;
+using ReversiRobot;
+using UnityEngine.Events;
+using ReversiCore.Enums;
 
 public class HumanController : MonoBehaviour
 {
-    [SerializeField] ReversiModelHolder holder;
+    public UnityAction<GameMode> OnNewGameStarted;
+
+    [SerializeField] 
+    ReversiModelHolder holder;
+
     private ReversiModel model;
+    private RandomUser robot;
 
     //convert coordinates and put chip
     private void PutChip(string cellName)
@@ -23,17 +30,26 @@ public class HumanController : MonoBehaviour
 
     public void NewGameWithRobotAsWhite()
     {
-        model.NewGame(GameMode.HumanToRobot, ChipColor.White);
+        OnNewGameStarted?.Invoke(GameMode.HumanToRobot);
+
+        robot.Enable(ChipColor.Black);
+        model.NewGame();
     }
 
     public void NewGameWithRobotAsBlack()
     {
-        model.NewGame(GameMode.HumanToRobot, ChipColor.Black);
+        OnNewGameStarted?.Invoke(GameMode.HumanToRobot);
+
+        robot.Enable(ChipColor.White);
+        model.NewGame();
     }
 
     public void NewGameWithSecondPlayer()
     {
-        model.NewGame(GameMode.HumanToHuman);
+        OnNewGameStarted?.Invoke(GameMode.HumanToHuman);
+
+        robot.Disable();
+        model.NewGame();
     }
 
     public void OnClicked()
@@ -45,5 +61,6 @@ public class HumanController : MonoBehaviour
     void Start()
     {
         model = holder.reversiModel;
+        robot = holder.robotPlayer;
     }
 }

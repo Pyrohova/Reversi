@@ -30,7 +30,7 @@ namespace ReversiCoreTest
             };
             model.CountChanged += (s, ea) => { Console.WriteLine("count {0} {1}", ea.CountBlack, ea.CountWhite); };
 
-            model.NewGame(GameMode.HumanToHuman);
+            model.NewGame();
 
             while (true)
             {
@@ -56,7 +56,9 @@ namespace ReversiCoreTest
                 }
             };
 
-            model.NewGame(GameMode.HumanToRobot, Color.Black);
+            robot.Enable(Color.White);
+
+            model.NewGame();
 
             while (true)
             {
@@ -72,7 +74,7 @@ namespace ReversiCoreTest
             ReversiModel model = new ReversiModel();
             RandomUser robot = new RandomUser(model);
 
-            model.NewGameStarted += (s, ea) => { Console.WriteLine(ea.UserPlayerColor); };
+            model.NewGameStarted += (s, ea) => { Console.WriteLine("Game started."); };
             model.SwitchMove += (s, ea) => { Console.WriteLine("Switch move {0}", ea.CurrentPlayerColor); };
             model.SwitchMove += (s, ea) =>
             {
@@ -83,7 +85,20 @@ namespace ReversiCoreTest
                 }
             };
 
-            model.NewGame(GameMode.HumanToRobot, userColor);
+            Color robotColor;
+
+            if (userColor == Color.Black)
+            {
+                robotColor = Color.White;
+            }
+            else
+            {
+                robotColor = Color.Black;
+            }
+
+            robot.Enable(robotColor);
+
+            model.NewGame();
 
             while (true)
             {
@@ -96,7 +111,7 @@ namespace ReversiCoreTest
 
         static void Main(string[] args)
         {
-            Test1();
+            Test3(Color.White);
         }
     }
 }
