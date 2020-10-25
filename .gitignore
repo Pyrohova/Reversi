@@ -66,3 +66,6 @@
 *[Oo]bj
 *[B]in
 # *.vs/*/DesignTimeBuild
+
+*ReversiBuildWindows
+*ReversiBuildAndroid
