@@ -1,5 +1,9 @@
+# git rm -r --cached .
+# git add .
+# git commit -m ".gitignore is now working"
+
 # This .gitignore file should be placed at the root of your Unity project directory
-#
+
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
 *ReversiUnityGame/[Ll]ibrary/
@@ -12,6 +16,7 @@
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 # !/[Aa]ssets/**/*.meta
+
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
@@ -57,3 +62,7 @@
 
 # Crashlytics generated file
 *crashlytics-build.properties
+
+*/[Oo]bj/
+*/[B]in/
+*.vs/*/DesignTimeBuild
