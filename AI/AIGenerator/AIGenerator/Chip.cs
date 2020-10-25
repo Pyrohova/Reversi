@@ -1,4 +1,6 @@
-﻿namespace AIGenerator
+﻿using ReversiCore.Enums;
+
+namespace AIGenerator
 {
     //Reversi game chip
     public class Chip

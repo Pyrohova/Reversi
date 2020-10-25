@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ReversiCore.Enums;
 
 namespace AIGenerator
 {
@@ -33,7 +34,7 @@ namespace AIGenerator
                         currentX += stepX;
                         currentY += stepY;
 
-                        if (field.Field[currentX, currentY] == Color.None)
+                        if (field.Field[currentX, currentY] == null)
                         {
                             break;
                         }

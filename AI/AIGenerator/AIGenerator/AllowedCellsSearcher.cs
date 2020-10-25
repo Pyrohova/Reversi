@@ -69,7 +69,7 @@ namespace AIGenerator
                             break;
                         }
 
-                        if (field.Field[currentX, currentY] == Color.None)
+                        if (field.Field[currentX, currentY] == null)
                         {
                             if (distance > 1)
                             {

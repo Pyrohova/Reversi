@@ -8,8 +8,7 @@
     ".NETCoreApp,Version=v3.1": {
       "AIGenerator/1.0.0": {
         "dependencies": {
-          "ReversiCore": "1.0.0.0",
-          "ReversiRobot": "1.0.0.0"
+          "ReversiCore": "1.0.0.0"
         },
         "runtime": {
           "AIGenerator.dll": {}
@@ -18,14 +17,6 @@
       "ReversiCore/1.0.0.0": {
         "runtime": {
           "ReversiCore.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
-      },
-      "ReversiRobot/1.0.0.0": {
-        "runtime": {
-          "ReversiRobot.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -40,11 +31,6 @@
       "sha512": ""
     },
     "ReversiCore/1.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "ReversiRobot/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
