@@ -111,7 +111,7 @@ namespace ReversiCoreTest
 
         static void Main(string[] args)
         {
-            Test3(Color.White);
+            Test3(Color.Black);
         }
     }
 }

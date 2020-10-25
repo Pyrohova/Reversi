@@ -11,7 +11,8 @@ using ReversiCore.Enums;
 
 public class HumanController : MonoBehaviour
 {
-    public UnityAction<GameMode> OnNewGameStarted;
+    public UnityAction<GameMode> OnGameModeChanged;
+    public UnityAction<ChipColor> OnPlayerColorChanged;
 
     [SerializeField] 
     ReversiModelHolder holder;
@@ -30,7 +31,8 @@ public class HumanController : MonoBehaviour
 
     public void NewGameWithRobotAsWhite()
     {
-        OnNewGameStarted?.Invoke(GameMode.HumanToRobot);
+        OnGameModeChanged?.Invoke(GameMode.HumanToRobot);
+        OnPlayerColorChanged?.Invoke(ChipColor.White);
 
         robot.Enable(ChipColor.Black);
         model.NewGame();
@@ -38,7 +40,8 @@ public class HumanController : MonoBehaviour
 
     public void NewGameWithRobotAsBlack()
     {
-        OnNewGameStarted?.Invoke(GameMode.HumanToRobot);
+        OnGameModeChanged?.Invoke(GameMode.HumanToRobot);
+        OnPlayerColorChanged?.Invoke(ChipColor.Black);
 
         robot.Enable(ChipColor.White);
         model.NewGame();
@@ -46,7 +49,7 @@ public class HumanController : MonoBehaviour
 
     public void NewGameWithSecondPlayer()
     {
-        OnNewGameStarted?.Invoke(GameMode.HumanToHuman);
+        OnGameModeChanged?.Invoke(GameMode.HumanToHuman);
 
         robot.Disable();
         model.NewGame();

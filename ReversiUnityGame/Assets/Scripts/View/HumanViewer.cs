@@ -116,6 +116,11 @@ namespace Assets.Scripts.View
             currentMode = gameMode;
         }
 
+        private void SetPlayerColor(ChipColor newPlayerColor)
+        {
+            playerColor = newPlayerColor;
+        }
+
         private void GameOver(object sender, GameOverEventArgs e)
         {
             // display info who is a winner
@@ -157,7 +162,8 @@ namespace Assets.Scripts.View
 
         private void SubscribeOnEvents()
         {
-            controller.OnNewGameStarted += SetGameMode;
+            controller.OnGameModeChanged += SetGameMode;
+            controller.OnPlayerColorChanged += SetPlayerColor;
 
             model.NewGameStarted += NewGameStarted;
             model.WrongMove += WrongMove;
