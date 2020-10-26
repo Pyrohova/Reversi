@@ -6,8 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Reference Include="AIGenerator">
+      <HintPath>..\..\AIGenerator\AIGenerator\bin\Debug\netcoreapp3.1\AIGenerator.dll</HintPath>
+    </Reference>
     <Reference Include="ReversiCore">
-      <HintPath>..\..\..\ReversiCore\ReversiCore\bin\Debug\netstandard2.0\ReversiCore.dll</HintPath>
+      <HintPath>..\..\AIGenerator\AIGenerator\bin\Debug\netcoreapp3.1\ReversiCore.dll</HintPath>
     </Reference>
   </ItemGroup>
 
