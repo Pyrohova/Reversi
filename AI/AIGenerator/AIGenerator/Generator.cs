@@ -7,14 +7,13 @@ namespace AIGenerator
 {
     public class Generator
     {
-        private const int MAX_DEPTH = 2;
+        private const int MAX_DEPTH = 5;
 
         private BoardState currentBoardState;
         private ReversiModel model;
         private Cell blackHole;
         private Color currentColor;
         public bool GameIsOver { get; private set; }
-        private Color? winnerColor;
 
 
         public Generator(ReversiModel currentModel)
@@ -22,7 +21,7 @@ namespace AIGenerator
             model = currentModel;
 
             model.SetChips += (s, ea) => { SetNewChips(s, ea); };
-            //model.SwitchMove += OnSwitchMove;
+            model.SwitchMove += OnSwitchMove;
             model.GameOver += OnGameOver;
         }
 
@@ -30,7 +29,6 @@ namespace AIGenerator
         {
             currentColor = currentPlayerColor;
 
-            winnerColor = null;
             GameIsOver = false;
             blackHole = currentBlackHole;
             SetStartBoard();
@@ -39,13 +37,7 @@ namespace AIGenerator
 
         public void MakeMove()
         {
-            if (GameIsOver)
-            {
-                if (winnerColor != currentColor)
-                {
-                    Console.WriteLine("pass");
-                }
-            }
+            GameIsOver = false;
 
             Cell moveCell = GetCellToMakeMove();
 
@@ -59,12 +51,10 @@ namespace AIGenerator
 
         private void OnSwitchMove(object sender, SwitchMoveEventArgs eventArgs)
         {
-            if (eventArgs.CurrentPlayerColor != currentColor)
+            if (eventArgs.CurrentPlayerColor == currentColor)
             {
-                return;
+                GameIsOver = false;
             }
-
-            MakeMove();
         }
 
         private void OnGameOver(object sender, GameOverEventArgs eventArgs)
@@ -196,9 +186,26 @@ namespace AIGenerator
             AllowedCellsSearcher cellsSearcher = new AllowedCellsSearcher(currentBoardState, currentColor);
             SortedSet<Cell> allowedCells = cellsSearcher.GetAllAllowedCells();
 
+            /*foreach(Cell cell in allowedCells)
+            {
+                Console.WriteLine("{0} {1}", cell.X, cell.Y);
+            }
+            Console.WriteLine();
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (currentBoardState.Field[i, j] != null)
+                        Console.Write("{0} ", currentBoardState.Field[i, j].ToString()[0]);
+                    else
+                        Console.Write("_ ");
+                }
+                Console.WriteLine();
+            }*/
+
             bool theOnlyAllowedCellIsBlackHole = (allowedCells.Count == 1) && (allowedCells.Contains(blackHole));
 
-            if (theOnlyAllowedCellIsBlackHole)
+            if (allowedCells.Count == 0 || theOnlyAllowedCellIsBlackHole)
             {
                 GameIsOver = true;
                 Console.WriteLine("pass");
@@ -210,7 +217,7 @@ namespace AIGenerator
             float bestValue = 0;
             bool firstChildCalculated = false;
 
-            bool ifMaximizeNextStep = (currentColor == Color.Black);
+            bool ifMaximizeNextStep = (currentColor == Color.White);
 
             foreach (Cell cell in allowedCells)
             {

@@ -90,20 +90,13 @@ namespace AI
                     generator.MakeMove();
                 }
 
-                while(!generator.GameIsOver)
+                while(!generator.GameIsOver || !opponentPassed)
                 {
                     AIGenerator.Cell opponentMoveCell = ReadOpponentMove();
 
-                    if (opponentPassed)
+                    if (!opponentPassed)
                     {
-                        break;
-                    }
-
-                    model.PutChip(opponentMoveCell.X, opponentMoveCell.Y);
-
-                    if (generator.GameIsOver)
-                    {
-                        break;
+                        model.PutChip(opponentMoveCell.X, opponentMoveCell.Y);
                     }
 
                     generator.MakeMove();

@@ -12,6 +12,7 @@ namespace ReversiCore
         private Board board; //Game board
         private CountHolder countHolder; //Responsible for current score of both players (Black and White)
         private SortedSet<Cell> currentAllowedCells; //Set of cells where current player can put their chip
+        private Dictionary<Color, bool> playerHasPassed;
 
         public event EventHandler NewGameStarted; //Invokes when new game has been started
         public event EventHandler<SetChipsEventArgs> SetChips; //Invokes when chips layout has been changed
@@ -19,9 +20,13 @@ namespace ReversiCore
         public event EventHandler<WrongMoveEventArgs> WrongMove; //Invokes when wrong move has been made by one of the users
         public event EventHandler<CountChangedEventArgs> CountChanged; //Invokes when players score has been changed
         public event EventHandler<GameOverEventArgs> GameOver; //Invokes when game has been finished
-        
+
         public ReversiModel()
         {
+            playerHasPassed = new Dictionary<Color, bool>();
+            playerHasPassed.Add(Color.White, false);
+            playerHasPassed.Add(Color.Black, false);
+
             turnHolder = new TurnHolder();
             board = new Board();
             currentAllowedCells = new SortedSet<Cell>();
@@ -34,6 +39,9 @@ namespace ReversiCore
          */
         public void NewGame()
         {
+            playerHasPassed[Color.White] = false;
+            playerHasPassed[Color.Black] = false;
+
             turnHolder.Reset();
             
             NewGameStarted?.Invoke(this, new EventArgs());
@@ -41,6 +49,12 @@ namespace ReversiCore
             SetStartBoardPosition();
 
             countHolder.Reset();
+
+            CountChanged?.Invoke(this, new CountChangedEventArgs
+            {
+                CountWhite = countHolder.GetPlayerCount(Color.White),
+                CountBlack = countHolder.GetPlayerCount(Color.Black),
+            });
 
             FinishTurnAndMoveOn();
         }
@@ -71,6 +85,12 @@ namespace ReversiCore
 
             turnHolder.Switch();
 
+            CountChanged?.Invoke(this, new CountChangedEventArgs
+            {
+                CountWhite = countHolder.GetPlayerCount(Color.White),
+                CountBlack = countHolder.GetPlayerCount(Color.Black),
+            });
+
             FinishTurnAndMoveOn();
         }
 
@@ -83,19 +103,27 @@ namespace ReversiCore
          */
         private void FinishTurnAndMoveOn()
         {
-            CountChanged?.Invoke(this, new CountChangedEventArgs
-            {
-                CountWhite = countHolder.GetPlayerCount(Color.White),
-                CountBlack = countHolder.GetPlayerCount(Color.Black),
-            });
-
             currentAllowedCells = board.GetAllowedCells(turnHolder.CurrentTurnColor);
 
             if (currentAllowedCells.Count == 0)
             {
-                EndGame();
+                playerHasPassed[turnHolder.CurrentTurnColor] = true;
+
+                if (playerHasPassed[turnHolder.OppositeTurnColor])
+                {
+                    EndGame();
+                }
+                else
+                {
+                    turnHolder.Switch();
+
+                    FinishTurnAndMoveOn();
+                }
                 return;
             }
+
+            playerHasPassed[Color.White] = false;
+            playerHasPassed[Color.Black] = false;
 
             SwitchMove?.Invoke(
                 this, 
