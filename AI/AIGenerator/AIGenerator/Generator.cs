@@ -7,7 +7,7 @@ namespace AIGenerator
 {
     public class Generator
     {
-        private const int MAX_DEPTH = 5;
+        private const int MAX_DEPTH = 3;
 
         private BoardState currentBoardState;
         private ReversiModel model;
