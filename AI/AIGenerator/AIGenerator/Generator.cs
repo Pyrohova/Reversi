@@ -33,7 +33,6 @@ namespace AIGenerator
             model.SetChips += (s, ea) => { SetNewChips(s, ea); };
             model.SwitchMove += OnSwitchMove;
             model.GameOver += OnGameOver;
-            //model.WrongMove += (s, ea) => { Console.WriteLine("===================== {0}", ea.WrongChip.Color); };
         }
 
         public void StartGame(Cell currentBlackHole, Color currentPlayerColor)
@@ -62,7 +61,6 @@ namespace AIGenerator
 
         private void OnSwitchMove(object sender, SwitchMoveEventArgs eventArgs)
         {
-            //Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^ {0}", eventArgs.CurrentPlayerColor);
             if (eventArgs.CurrentPlayerColor == currentColor)
             {
                 GameIsOver = false;
@@ -201,21 +199,6 @@ namespace AIGenerator
                 }
             }
             return (blackScore / blackCounter) - (whiteScore / whiteCounter);
-            /*float distanceTotal = 0;
-
-            for (var i = 0; i < 8; i++)
-                for (var j = 0; j < 8; j++)
-                    if (boardState.Field[i, j] == Color.Black)
-                        distanceTotal += DistSquared(i - 4.5f, j - 4.5f);
-                    else if (boardState.Field[i, j] == Color.White)
-                        distanceTotal -= DistSquared(i - 4.5f, j - 4.5f);
-
-            return distanceTotal;*/
-        }
-
-        private static float DistSquared(float x, float y)
-        {
-            return x * x + y * y;
         }
 
         private Cell GetCellToMakeMove()
@@ -223,36 +206,16 @@ namespace AIGenerator
             AllowedCellsSearcher cellsSearcher = new AllowedCellsSearcher(currentBoardState, currentColor);
             SortedSet<Cell> allowedCells = cellsSearcher.GetAllAllowedCells();
 
-            /*foreach(Cell cell in allowedCells)
-            {
-                Console.WriteLine("{0} {1}", cell.X, cell.Y);
-            }
-            Console.WriteLine();
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    if (currentBoardState.Field[i, j] != null)
-                        Console.Write("{0} ", currentBoardState.Field[i, j].ToString()[0]);
-                    else
-                        Console.Write("_ ");
-                }
-                Console.WriteLine();
-            }*/
-
             bool ifMaximizeNextStep = (currentColor == Color.White);
 
             bool theOnlyAllowedCellIsBlackHole = (allowedCells.Count == 1) && (allowedCells.Contains(blackHole));
 
             if (allowedCells.Count == 0 || theOnlyAllowedCellIsBlackHole)
             {
-                //if (MiniMax(currentBoardState, currentColor, MAX_DEPTH, ifMaximizeNextStep, int.MinValue, int.MaxValue) == float.MinValue)
-                //{
-                    GameIsOver = true;
-                    model.Pass(currentColor);
-                    Console.WriteLine("pass");
-                    return new Cell(0, 0);
-                //}
+                GameIsOver = true;
+                model.Pass(currentColor);
+                Console.WriteLine("pass");
+                return new Cell(0, 0);
             }
 
             Cell moveCell = null;
