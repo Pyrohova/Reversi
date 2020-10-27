@@ -24,5 +24,7 @@ namespace ReversiCore.Interfaces
          * y - y coordinate of new chip
          */
         void PutChip(int x, int y);
+
+        void Pass(Color passedPlayerColor);
     }
 }

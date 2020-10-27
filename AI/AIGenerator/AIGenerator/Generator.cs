@@ -13,6 +13,16 @@ namespace AIGenerator
         private ReversiModel model;
         private Cell blackHole;
         private Color currentColor;
+        private float[,] evalMatrix = new float[8, 8]{
+                        {20, -3, 11, 8,  8, 11, -3, 20},
+                        {-3, -7, -4, 1,  1, -4, -7, -3},
+                        { 11, -4, 2,  2,  2,  2, -4, 11},
+                        { 8,  1, 2, -3, -3,  2,  1,  8},
+                        { 8,  1, 2, -3, -3,  2,  1,  8},
+                        { 11, -4, 2,  2,  2,  2, -4, 11},
+                        { -3, -7, -4, 1,  1, -4, -7, -3},
+                        { 20, -3, 11, 8,  8, 11, -3, 20}
+            };
         public bool GameIsOver { get; private set; }
 
 
@@ -23,6 +33,7 @@ namespace AIGenerator
             model.SetChips += (s, ea) => { SetNewChips(s, ea); };
             model.SwitchMove += OnSwitchMove;
             model.GameOver += OnGameOver;
+            //model.WrongMove += (s, ea) => { Console.WriteLine("===================== {0}", ea.WrongChip.Color); };
         }
 
         public void StartGame(Cell currentBlackHole, Color currentPlayerColor)
@@ -51,6 +62,7 @@ namespace AIGenerator
 
         private void OnSwitchMove(object sender, SwitchMoveEventArgs eventArgs)
         {
+            //Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^ {0}", eventArgs.CurrentPlayerColor);
             if (eventArgs.CurrentPlayerColor == currentColor)
             {
                 GameIsOver = false;
@@ -67,17 +79,21 @@ namespace AIGenerator
             AllowedCellsSearcher cellsSearcher = new AllowedCellsSearcher(boardState, currentPlayerColor);
             SortedSet<Cell> allowedCells = cellsSearcher.GetAllAllowedCells();
 
-            float staticEvaluation = StaticEvaluationFunction(boardState);
+            Color oppositeColor = (currentPlayerColor == Color.White) ? Color.Black : Color.White;
+
+            if (depth == 0)
+            {
+                return StaticEvaluationFunction(boardState);
+            }
 
             bool theOnlyAllowedCellIsBlackHole = (allowedCells.Count == 1) && (allowedCells.Contains(blackHole));
 
-            if (depth == 0 || allowedCells.Count == 0 || theOnlyAllowedCellIsBlackHole)
+            if (theOnlyAllowedCellIsBlackHole || allowedCells.Count == 0)
             {
-                return staticEvaluation;
+                return MiniMax(boardState, oppositeColor, depth - 1, !maximizingPlayer, alpha, beta);
             }
 
             float eval;
-            Color oppositeColor = (currentPlayerColor == Color.White) ? Color.Black : Color.White;
 
             int minMaxCoeff;
 
@@ -160,25 +176,46 @@ namespace AIGenerator
             return nextBoardState;
         }
 
-        private int CalculateColorValue(BoardState boardState, Color color)
+        private float StaticEvaluationFunction(BoardState boardState)
         {
-            int result = 0;
+            int blackCounter = 0;
+            int whiteCounter = 0;
+
+            float blackScore = 0;
+            float whiteScore = 0;
 
             for (int i = 0; i < boardState.FieldSize; i++)
             {
                 for (int j = 0; j < boardState.FieldSize; j++)
                 {
-                    if (boardState.Field[i, j] == color)
-                        ++result;
+                    if (boardState.Field[i, j] == Color.Black)
+                    {
+                        ++blackCounter;
+                        blackScore += evalMatrix[i, j];
+                    }
+                    else if (boardState.Field[i, j] == Color.White)
+                    {
+                        ++whiteCounter;
+                        whiteScore += evalMatrix[i, j];
+                    }
                 }
             }
+            return (blackScore / blackCounter) - (whiteScore / whiteCounter);
+            /*float distanceTotal = 0;
 
-            return result;
+            for (var i = 0; i < 8; i++)
+                for (var j = 0; j < 8; j++)
+                    if (boardState.Field[i, j] == Color.Black)
+                        distanceTotal += DistSquared(i - 4.5f, j - 4.5f);
+                    else if (boardState.Field[i, j] == Color.White)
+                        distanceTotal -= DistSquared(i - 4.5f, j - 4.5f);
+
+            return distanceTotal;*/
         }
 
-        private float StaticEvaluationFunction(BoardState boardState)
+        private static float DistSquared(float x, float y)
         {
-            return CalculateColorValue(boardState, Color.Black) - CalculateColorValue(boardState, Color.White);
+            return x * x + y * y;
         }
 
         private Cell GetCellToMakeMove()
@@ -203,21 +240,25 @@ namespace AIGenerator
                 Console.WriteLine();
             }*/
 
+            bool ifMaximizeNextStep = (currentColor == Color.White);
+
             bool theOnlyAllowedCellIsBlackHole = (allowedCells.Count == 1) && (allowedCells.Contains(blackHole));
 
             if (allowedCells.Count == 0 || theOnlyAllowedCellIsBlackHole)
             {
-                GameIsOver = true;
-                Console.WriteLine("pass");
-                return new Cell(0, 0);
+                //if (MiniMax(currentBoardState, currentColor, MAX_DEPTH, ifMaximizeNextStep, int.MinValue, int.MaxValue) == float.MinValue)
+                //{
+                    GameIsOver = true;
+                    model.Pass(currentColor);
+                    Console.WriteLine("pass");
+                    return new Cell(0, 0);
+                //}
             }
 
             Cell moveCell = null;
 
             float bestValue = 0;
             bool firstChildCalculated = false;
-
-            bool ifMaximizeNextStep = (currentColor == Color.White);
 
             foreach (Cell cell in allowedCells)
             {

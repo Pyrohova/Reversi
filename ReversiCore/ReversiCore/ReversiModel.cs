@@ -95,6 +95,25 @@ namespace ReversiCore
         }
 
 
+        public void Pass(Color passedPlayerColor)
+        {
+            if (passedPlayerColor == turnHolder.CurrentTurnColor)
+            {
+                playerHasPassed[turnHolder.CurrentTurnColor] = true;
+
+                if (playerHasPassed[turnHolder.OppositeTurnColor])
+                {
+                    EndGame();
+                }
+                else
+                {
+                    turnHolder.Switch();
+                    FinishTurnAndMoveOn();
+                }
+            }
+        }
+
+
         /*
          * Metod prepares model and players for the next move 
          * and notifies players that move has been switched.
@@ -107,18 +126,7 @@ namespace ReversiCore
 
             if (currentAllowedCells.Count == 0)
             {
-                playerHasPassed[turnHolder.CurrentTurnColor] = true;
-
-                if (playerHasPassed[turnHolder.OppositeTurnColor])
-                {
-                    EndGame();
-                }
-                else
-                {
-                    turnHolder.Switch();
-
-                    FinishTurnAndMoveOn();
-                }
+                Pass(turnHolder.CurrentTurnColor);
                 return;
             }
 

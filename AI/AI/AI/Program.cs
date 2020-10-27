@@ -78,11 +78,13 @@ namespace AI
             model = new ReversiModel();
             generator = new Generator(model);
             opponentPassed = false;
+            Color opponentColor;
 
             try
             {
                 AIGenerator.Cell blackHole = ReadCell();
                 playerColor = ReadColor();
+                opponentColor = playerColor == Color.Black ? Color.White : Color.Black;
                 generator.StartGame(blackHole, playerColor);
 
                 if (playerColor == Color.Black)
@@ -92,11 +94,17 @@ namespace AI
 
                 while(!generator.GameIsOver || !opponentPassed)
                 {
+                    opponentPassed = false;
+
                     AIGenerator.Cell opponentMoveCell = ReadOpponentMove();
 
                     if (!opponentPassed)
                     {
                         model.PutChip(opponentMoveCell.X, opponentMoveCell.Y);
+                    }
+                    else
+                    {
+                        model.Pass(opponentColor);
                     }
 
                     generator.MakeMove();
