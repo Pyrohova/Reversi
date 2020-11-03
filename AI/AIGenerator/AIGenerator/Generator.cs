@@ -2,42 +2,43 @@
 using ReversiCore.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AIGenerator
 {
     public class Generator
     {
-        private const int MAX_DEPTH = 3;
-
         private BoardState currentBoardState;
         private ReversiModel model;
         private Cell blackHole;
-        private Color currentColor;
-        private float[,] evalMatrix = new float[8, 8]{
-                        {20, -3, 11, 8,  8, 11, -3, 20},
-                        {-3, -7, -4, 1,  1, -4, -7, -3},
-                        { 11, -4, 2,  2,  2,  2, -4, 11},
-                        { 8,  1, 2, -3, -3,  2,  1,  8},
-                        { 8,  1, 2, -3, -3,  2,  1,  8},
-                        { 11, -4, 2,  2,  2,  2, -4, 11},
-                        { -3, -7, -4, 1,  1, -4, -7, -3},
-                        { 20, -3, 11, 8,  8, 11, -3, 20}
-            };
+        private Color currentColor; //color of this AI in current game
+        private Color oppositeColor; //color of an opponent in current game
+        private const int RUNS_Count = 20;
+        private Random rand;
         public bool GameIsOver { get; private set; }
-
 
         public Generator(ReversiModel currentModel)
         {
             model = currentModel;
+            rand = new Random();
 
             model.SetChips += (s, ea) => { SetNewChips(s, ea); };
             model.SwitchMove += OnSwitchMove;
             model.GameOver += OnGameOver;
         }
 
+
+        /*
+         * Starts new game
+         * --------------------------------------------
+         * currentBlackHole - black hole of current game
+         * currentPlayerColor - color of this AI in current game
+         */
         public void StartGame(Cell currentBlackHole, Color currentPlayerColor)
         {
             currentColor = currentPlayerColor;
+            oppositeColor = (currentColor == Color.Black) ? Color.White : Color.Black;
 
             GameIsOver = false;
             blackHole = currentBlackHole;
@@ -45,6 +46,10 @@ namespace AIGenerator
             model.NewGame();
         }
 
+
+        /*
+         * Makes next move if it is possible
+         */
         public void MakeMove()
         {
             GameIsOver = false;
@@ -59,6 +64,10 @@ namespace AIGenerator
             Console.WriteLine("{0}{1}", (char)('A' + moveCell.Y), (char)('1' + moveCell.X));
         }
 
+
+        /*
+         * Method that is called when SwitchOver event of the model is invoked
+         */
         private void OnSwitchMove(object sender, SwitchMoveEventArgs eventArgs)
         {
             if (eventArgs.CurrentPlayerColor == currentColor)
@@ -67,150 +76,152 @@ namespace AIGenerator
             }
         }
 
+
+        /*
+         * Method that is called when GameOver event of the model is invoked
+         */
         private void OnGameOver(object sender, GameOverEventArgs eventArgs)
         {
             GameIsOver = true;
         }
 
-        private float MiniMax(BoardState boardState, Color currentPlayerColor, int depth, bool maximizingPlayer, float alpha, float beta)
+
+        /* Returns color of winner in randomly generated game
+         * --------------------------------------------
+         * boardState - board state from which game continues
+         * currentPlayerColor - color of player that makes current move
+         * passesCount - count of passes made in a row during the current game
+         */
+        private Color? GetRandomWinner(BoardState boardState, Color currentPlayerColor, int passesCount)
         {
+            Color oppositePlayerColor = (currentPlayerColor == Color.White) ? Color.Black : Color.White;
+
+            if (passesCount == 2)
+            {
+                return GetCurrentWinner(boardState);
+            }
+
             AllowedCellsSearcher cellsSearcher = new AllowedCellsSearcher(boardState, currentPlayerColor);
-            SortedSet<Cell> allowedCells = cellsSearcher.GetAllAllowedCells();
+            SortedSet<Cell> allowedCellsSet = cellsSearcher.GetAllAllowedCells();
+            allowedCellsSet.Remove(blackHole);
+            List<Cell> allowedCells = allowedCellsSet.ToList();
 
-            Color oppositeColor = (currentPlayerColor == Color.White) ? Color.Black : Color.White;
-
-            if (depth == 0)
+            if (allowedCells.Count == 0)
             {
-                return StaticEvaluationFunction(boardState);
+                return GetRandomWinner(boardState, oppositePlayerColor, passesCount + 1);
             }
 
-            bool theOnlyAllowedCellIsBlackHole = (allowedCells.Count == 1) && (allowedCells.Contains(blackHole));
+            int moveNumber = rand.Next(allowedCells.Count);
 
-            if (theOnlyAllowedCellIsBlackHole || allowedCells.Count == 0)
+            MakeMoveIntoBoardState(boardState, allowedCells[moveNumber], currentPlayerColor);
+
+            return GetRandomWinner(boardState, oppositePlayerColor, 0);
+        }
+
+
+        /* Returns color of winner on given board state (or returns null in case of a draw)
+         * --------------------------------------------
+         * boardState - board state to calculate winner on
+         */
+        private Color? GetCurrentWinner(BoardState boardState)
+        {
+            int blackCount = CountChipsForPlayer(boardState, Color.Black);
+            int whiteCount = CountChipsForPlayer(boardState, Color.White);
+
+
+            if (blackCount < whiteCount)
             {
-                return MiniMax(boardState, oppositeColor, depth - 1, !maximizingPlayer, alpha, beta);
+                return Color.Black;
             }
-
-            float eval;
-
-            int minMaxCoeff;
-
-            if (maximizingPlayer)
+            else if (blackCount > whiteCount)
             {
-                minMaxCoeff = 1;
+                return Color.White;
             }
             else
             {
-                minMaxCoeff = -1;
+                return null;
             }
-
-            float maxValue = 0;
-            bool firstChildCalculated = false;
-
-            // for each child of the current boardState
-            foreach (Cell cell in allowedCells)
-            {
-                if (cell.CompareTo(blackHole) == 0)
-                {
-                    continue;
-                }
-
-                // get child
-                BoardState nextBoardState = GetBoardStateAfterMove(boardState, cell, currentPlayerColor);
-
-                eval = MiniMax(nextBoardState, oppositeColor, depth - 1, !maximizingPlayer, alpha, beta);
-                eval *= minMaxCoeff;
-
-                if (!firstChildCalculated)
-                {
-                    maxValue = eval;
-                    firstChildCalculated = true;
-                }
-                else if (eval <= maxValue)
-                {
-                    continue;
-                }
-
-                maxValue = eval;
-
-                if (maximizingPlayer)
-                {
-                    alpha = maxValue;
-                }
-                else
-                {
-                    beta = maxValue * -1;
-                }
-
-                if (beta <= alpha)
-                    break;
-            }
-
-            return maxValue;
         }
 
-        private BoardState GetBoardStateAfterMove(BoardState prevBoardState, Cell moveCell, Color moveColor)
+
+        /*
+         * Makes move of given color into given cell of given board state
+         * --------------------------------------------
+         * boardState - board state to make move into
+         * moveCell - cell to make move into
+         * moveColor - color of chip to make move with
+         */
+        private void MakeMoveIntoBoardState(BoardState boardState, Cell moveCell, Color moveColor)
         {
-            BoardState nextBoardState = new BoardState();
+            boardState.Field[moveCell.X, moveCell.Y] = moveColor;
 
-            for (int i = 0; i < prevBoardState.FieldSize; i++)
-            {
-                for (int j = 0; j < prevBoardState.FieldSize; j++)
-                {
-                    nextBoardState.Field[i, j] = prevBoardState.Field[i, j];
-                }
-            }
-
-            nextBoardState.Field[moveCell.X, moveCell.Y] = moveColor;
-
-            ChangedChipsSearcher changedChipsSearcher = new ChangedChipsSearcher(prevBoardState, moveColor);
+            ChangedChipsSearcher changedChipsSearcher = new ChangedChipsSearcher(boardState, moveColor);
             List<Chip> changedChips = changedChipsSearcher.GetAllChangedChips(new Chip(moveColor, moveCell));
 
             foreach(Chip chip in changedChips)
             {
-                nextBoardState.Field[chip.Cell.X, chip.Cell.Y] = chip.Color;
+                boardState.Field[chip.Cell.X, chip.Cell.Y] = chip.Color;
             }
-
-            return nextBoardState;
         }
 
-        private float StaticEvaluationFunction(BoardState boardState)
-        {
-            int blackCounter = 0;
-            int whiteCounter = 0;
 
-            float blackScore = 0;
-            float whiteScore = 0;
+        /*
+         * Returns deep copy of given board state
+         * --------------------------------------------
+         * boardState - board state to copy
+         */
+        private BoardState GetBoardStateCopy(BoardState boardState)
+        {
+            BoardState boardStateCopy = new BoardState();
 
             for (int i = 0; i < boardState.FieldSize; i++)
             {
                 for (int j = 0; j < boardState.FieldSize; j++)
                 {
-                    if (boardState.Field[i, j] == Color.Black)
+                    boardStateCopy.Field[i, j] = boardState.Field[i, j];
+                }
+            }
+
+            return boardStateCopy;
+        }
+
+
+        /*
+         * Returns count of chips of particular color on given board state
+         * --------------------------------------------
+         * board - given board state 
+         * player - color of chips to count
+         */
+        private int CountChipsForPlayer(BoardState board, Color? player)
+        {
+            int count = 0;
+
+            for (int i = 0; i < board.FieldSize; i++)
+            {
+                for (int j = 0; j < board.FieldSize; j++)
+                {
+                    if (board.Field[i, j] == player)
                     {
-                        ++blackCounter;
-                        blackScore += evalMatrix[i, j];
-                    }
-                    else if (boardState.Field[i, j] == Color.White)
-                    {
-                        ++whiteCounter;
-                        whiteScore += evalMatrix[i, j];
+                        count++;
                     }
                 }
             }
-            return (blackScore / blackCounter) - (whiteScore / whiteCounter);
+
+            return count;
         }
 
+
+        /*
+         * Returns the best cell to make next move into
+         */
         private Cell GetCellToMakeMove()
         {
             AllowedCellsSearcher cellsSearcher = new AllowedCellsSearcher(currentBoardState, currentColor);
-            SortedSet<Cell> allowedCells = cellsSearcher.GetAllAllowedCells();
+            SortedSet<Cell> allowedCellsSet = cellsSearcher.GetAllAllowedCells();
+            allowedCellsSet.Remove(blackHole);
+            List<Cell> allowedCells = allowedCellsSet.ToList();
 
-            bool ifMaximizeNextStep = (currentColor == Color.White);
-
-            bool theOnlyAllowedCellIsBlackHole = (allowedCells.Count == 1) && (allowedCells.Contains(blackHole));
-
-            if (allowedCells.Count == 0 || theOnlyAllowedCellIsBlackHole)
+            if (allowedCells.Count == 0)
             {
                 GameIsOver = true;
                 model.Pass(currentColor);
@@ -218,35 +229,66 @@ namespace AIGenerator
                 return new Cell(0, 0);
             }
 
-            Cell moveCell = null;
+            int bestWinRate = 0;
+            int bestWinRateInd = 0;
 
-            float bestValue = 0;
-            bool firstChildCalculated = false;
-
-            foreach (Cell cell in allowedCells)
+            for (int j = 0; j < allowedCells.Count; j++)
             {
-                if (cell.CompareTo(blackHole) == 0)
+                int currentWinCount = CountRandomWinsFromMove(allowedCells[j]);
+                if (currentWinCount > bestWinRate)
                 {
-                    continue;
+                    bestWinRate = currentWinCount;
+                    bestWinRateInd = j;
                 }
-
-                BoardState nextBoardState = GetBoardStateAfterMove(currentBoardState, cell, currentColor);
-
-                float eval = MiniMax(nextBoardState, currentColor, MAX_DEPTH, ifMaximizeNextStep, int.MinValue, int.MaxValue);
-
-                if (bestValue > eval || !firstChildCalculated)
-                {
-                    bestValue = eval;
-                    moveCell = cell;
-                }
-
-                firstChildCalculated = true;
             }
 
-            return moveCell;            
+            return allowedCells[bestWinRateInd];
         }
 
-        private void  SetNewChips(object sender, SetChipsEventArgs e)
+
+        /*
+         * Returns count of random wins after making given first move into current board state
+         * --------------------------------------------
+         * move - cell to make first move into
+         */
+        private int CountRandomWinsFromMove(Cell move)
+        {
+            int winsCount = 0;
+
+            BoardState nextBoardState = GetBoardStateCopy(currentBoardState);
+            MakeMoveIntoBoardState(nextBoardState, move, currentColor);
+
+            Task[] runTasks = new Task[RUNS_Count];
+            object lockObj = new object();
+
+            for (int i = 0; i < RUNS_Count; i++)
+            {
+                BoardState nextBoardStateCopy = GetBoardStateCopy(nextBoardState);
+                runTasks[i] = new Task(() =>
+                {
+                    Color? winner = GetRandomWinner(nextBoardStateCopy, oppositeColor, 0);
+
+                    if (winner == currentColor)
+                    {
+                        lock (lockObj)
+                        {
+                            winsCount++;
+                        }
+                    }
+                }
+                );
+                runTasks[i].Start();
+            }
+
+            Task.WaitAll(runTasks);
+            return winsCount;
+        }
+
+
+        /*
+         * Sets chips on board (called when SetChips event of the model is invoked)
+         */
+        private void SetNewChips(object sender, SetChipsEventArgs e)
         {
             currentBoardState.Field[e.NewChip.Cell.X, e.NewChip.Cell.Y] = e.NewChip.Color;
 
@@ -256,6 +298,10 @@ namespace AIGenerator
             }
         }
 
+
+        /*
+         * Sets board into state of start of a game
+         */
         private void SetStartBoard()
         {
             currentBoardState = new BoardState();

@@ -9,9 +9,14 @@ namespace AI
     {
         private static ReversiModel model;
         private static Generator generator;
-        private static Color playerColor;
-        private static bool opponentPassed;
+        private static Color playerColor; //color of this AI player in current game
+        private static bool opponentPassed; //if opponent has passes in his last move
 
+
+        /*
+         * Returns cell that opponent has made move into (reads it from console).
+         * If opponent has passed, returns (-1, -1).
+         */
         private static AIGenerator.Cell ReadOpponentMove()
         {
             string coordStr = Console.ReadLine();
@@ -25,6 +30,12 @@ namespace AI
             return ParseCell(coordStr);
         }
 
+
+        /*
+         * Returns cell that is obtained from given "С5" representation
+         * --------------------------------------------
+         * coordStr - given "С5" representation
+         */
         private static AIGenerator.Cell ParseCell(string coordStr)
         {
             coordStr = coordStr.Trim();
@@ -49,6 +60,10 @@ namespace AI
             return new AIGenerator.Cell(coordX, coordY);
         }
 
+
+        /*
+         * Returns cell that is read from console
+         */
         private static AIGenerator.Cell ReadCell()
         {
             string coordStr = Console.ReadLine();
@@ -56,6 +71,10 @@ namespace AI
             return ParseCell(coordStr);
         }
 
+
+        /*
+         * Returns color that is read from console
+         */
         private static Color ReadColor()
         {
             string color = Console.ReadLine();
